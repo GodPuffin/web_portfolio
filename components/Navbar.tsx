@@ -25,8 +25,8 @@ export function Navbar() {
     const ThemeIcon = colorScheme === 'dark' ? IconSun : IconMoonStars;
 
     return (
-        <div className={styles.navbarWrapper}>
-            <Container size="xs" p="xl">
+        <>
+            <Container size="xs" p="xl" className={styles.navbarWrapper}>
                 <Paper p="md" radius="xl" withBorder className={styles.navbarPaper}>
                     <Group justify="space-between" wrap="nowrap">
                         <Text ml="md" size="lg" className={styles.name} c={colorScheme === 'dark' ? 'white' : 'dark'}>Marcus Lee</Text>
@@ -113,6 +113,6 @@ export function Navbar() {
                     </Button>
                 </Stack>
             </Drawer>
-        </div>
+        </>
     );
 }
