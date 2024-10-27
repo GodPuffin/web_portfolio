@@ -1,35 +1,37 @@
 {
-  "name": "vite-min-template",
+  "name": "mantine-minimal-next-template",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
     "@mantine/core": "7.13.4",
     "@mantine/hooks": "7.13.4",
+    "@supabase/supabase-js": "^2.45.6",
     "@tabler/icons-react": "^3.20.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "next": "15.0.1",
+    "openai": "^4.68.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "@vitejs/plugin-react": "^4.3.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
+    "@types/node": "20.14.8",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@types/uuid": "^10",
+    "eslint": "8.57.0",
+    "eslint-config-next": "14.2.4",
     "postcss": "^8.4.38",
     "postcss-preset-mantine": "1.17.0",
     "postcss-simple-vars": "^7.0.1",
-    "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "typescript": "5.5.2"
   },
   "packageManager": "yarn@4.5.1"
 }

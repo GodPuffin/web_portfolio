@@ -1,3 +1,5 @@
+"use client";
+
 import { createTheme, MantineColorsTuple } from '@mantine/core';
 
 const CustomColors: MantineColorsTuple = [

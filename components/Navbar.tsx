@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { ActionIcon, Container, Group, Paper, Text, Drawer, Stack, Button } from "@mantine/core";
 import { IconBrandGithub, IconBrandInstagram, IconBrandLinkedin, IconDownload, IconMail, IconMenu2, IconMoonStars, IconSun } from "@tabler/icons-react";

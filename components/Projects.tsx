@@ -1,3 +1,5 @@
+"use client";
+
 import {
     ActionIcon,
     Badge,
@@ -221,7 +223,9 @@ export function Projects() {
     return (
         <Container size="md">
             <Stack gap="xl" mt={50} mb={50}>
-                <Title order={2} ta="center" style={{ zIndex: 5 }}>Projects 🚀</Title>
+                <Container size="xs">
+                    <Title order={2} ta="center" style={{ zIndex: 5 }}>Projects 🚀</Title>
+                </Container>
                 <Group
                     justify="center"
                     align="flex-start"

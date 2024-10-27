@@ -1,6 +1,10 @@
+"use client";
+
 import { IconPointerFilled } from '@tabler/icons-react';
 import { useEffect, useState, useCallback } from 'react';
 import { Tooltip } from "@mantine/core";
+import { supabase } from '../utils/supabaseClient';
+import { generateDeviceId } from '../utils/fingerprint';
 
 const FlyingCursor = ({ color, message }: { color: string; message: string }) => {
   const [position, setPosition] = useState({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight });
@@ -87,26 +91,76 @@ const FlyingCursor = ({ color, message }: { color: string; message: string }) =>
 };
 
 export const FlyingCursors = () => {
-  const colors = [
-    'red', 'pink', 'grape', 'indigo', 'blue', 
-    'cyan', 'teal', 'green', 'orange'
-  ];
-  const messages = [
-    "Hello!", "How are you?", "Nice to meet you!", "Have a great day!",
-    "Welcome!", "Enjoy your stay!", "Greetings!", "Cheers!", "Good luck!",
-    "Stay awesome!"
-  ];
-  const [cursors] = useState(() => 
-    Array.from({ length: 10 }, () => ({
-      color: colors[Math.floor(Math.random() * colors.length)],
-      message: messages[Math.floor(Math.random() * messages.length)]
-    }))
-  );
+  const [cursors, setCursors] = useState<Array<{ id: number, color: string, message: string }>>([]);
+  const [deviceId, setDeviceId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const initializeDeviceId = async () => {
+      let id = localStorage.getItem('deviceId');
+      if (!id) {
+        id = await generateDeviceId();
+        localStorage.setItem('deviceId', id);
+      }
+      setDeviceId(id);
+      fetchCursors(id);
+    };
+
+    initializeDeviceId();
+
+    const channel = supabase
+      .channel('cursors')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cursors' }, (payload) => fetchCursors(deviceId))
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchCursors = async (currentDeviceId: string | null) => {
+    if (!currentDeviceId) return;
+
+    const { data: currentDeviceCursor, error: currentDeviceError } = await supabase
+      .from('cursors')
+      .select('*')
+      .eq('device_id', currentDeviceId)
+      .single();
+
+    if (currentDeviceError && currentDeviceError.code !== 'PGRST116') {
+      console.error('Error fetching current device cursor:', currentDeviceError);
+    }
+
+    const { data: otherCursors, error: otherCursorsError } = await supabase
+      .from('cursors')
+      .select('*')
+      .neq('device_id', currentDeviceId)
+      .limit(100);
+
+    if (otherCursorsError) {
+      console.error('Error fetching other cursors:', otherCursorsError);
+    } else {
+      // Randomly select 15 cursors from the fetched ones
+      const randomCursors = otherCursors ? shuffleArray(otherCursors).slice(0, 15) : [];
+      const allCursors = currentDeviceCursor 
+        ? [currentDeviceCursor, ...randomCursors]
+        : randomCursors;
+      setCursors(allCursors);
+    }
+  };
+
+  // Helper function to shuffle an array
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  };
 
   return (
     <>
-      {cursors.map((cursor, index) => (
-        <FlyingCursor key={index} color={cursor.color} message={cursor.message} />
+      {cursors.map((cursor) => (
+        <FlyingCursor key={cursor.id} color={cursor.color} message={cursor.message} />
       ))}
     </>
   );
