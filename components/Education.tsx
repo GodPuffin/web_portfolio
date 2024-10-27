@@ -67,8 +67,8 @@ export function Education() {
   return (
     <Container size="md">
       <Stack gap="xl" mt={100} mb={50}>
-        <Container size="xs">
-          <Title order={2} ta="center" style={{ zIndex: 5 }}>Education 🎓</Title>
+        <Container size="xs" style={{ zIndex: 5 }}>
+          <Title order={2} ta="center">Education 🎓</Title>
         </Container>
         <Group justify="center" align="flex-start" style={{ position: 'relative' }}>
           <EducationCard

@@ -3,11 +3,11 @@ import { Container, Stack, Text, Title } from "@mantine/core";
 export function Welcome() {
   return (
     <Stack gap="xl">
-      <Container size="xs">
+      <Container size="xs" style={{ zIndex: 5 }}>
         <Title
           ta="center"
           order={1}
-          style={{ transition: "transform 0.3s ease", zIndex: 5 }}
+          style={{ transition: "transform 0.3s ease" }}
           onMouseEnter={(e) => {
             const target = e.currentTarget;
             const emojis = ["👋", "🍁", "🤖", "💻", "🚀", "⚛️", "🔧", "🌐"];

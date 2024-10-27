@@ -78,8 +78,8 @@ export function Experience() {
   return (
     <Container size="md">
       <Stack gap="xl" mt={100} mb={50}>
-        <Container size="xs">
-        <Title order={2} ta="center" style={{ zIndex: 5 }}>Experience 📝</Title>
+        <Container size="xs" style={{ zIndex: 5 }}>
+          <Title order={2} ta="center">Experience 📝</Title>
         </Container>
         <Group justify="center" align="flex-start" style={{ position: 'relative' }}>
           <ExperienceCard

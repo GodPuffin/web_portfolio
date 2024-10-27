@@ -223,8 +223,8 @@ export function Projects() {
     return (
         <Container size="md">
             <Stack gap="xl" mt={50} mb={50}>
-                <Container size="xs">
-                    <Title order={2} ta="center" style={{ zIndex: 5 }}>Projects 🚀</Title>
+                <Container size="xs" style={{ zIndex: 5 }}>
+                    <Title order={2} ta="center">Projects 🚀</Title>
                 </Container>
                 <Group
                     justify="center"
