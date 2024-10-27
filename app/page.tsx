@@ -4,7 +4,8 @@ import "@mantine/core/styles.css";
 import "./main.css";
 import { Container } from "@mantine/core";
 import dynamic from 'next/dynamic';
-import { useLocalStorage } from '@mantine/hooks';
+import { useLocalStorage, useViewportSize } from '@mantine/hooks';
+import { useEffect } from 'react';
 
 const Welcome = dynamic(() => import("../components/Welcome").then(mod => mod.Welcome), { ssr: false });
 const Experience = dynamic(() => import("../components/Experience").then(mod => mod.Experience), { ssr: false });
@@ -15,10 +16,17 @@ const FlyingCursors = dynamic(() => import("../components/FlyingCursors").then(m
 const Navbar = dynamic(() => import('../components/Navbar').then(mod => mod.Navbar), { ssr: false });
 
 export default function HomePage() {
-  const [showCursors] = useLocalStorage({
+  const { width } = useViewportSize();
+  const [showCursors, setShowCursors] = useLocalStorage({
     key: 'show-cursors',
     defaultValue: true,
   });
+
+  useEffect(() => {
+    if (width <= 768) {
+      setShowCursors(false);
+    }
+  }, [width, setShowCursors]);
 
   return (
     <>

@@ -22,7 +22,7 @@ import {
 import { supabase } from "../utils/supabaseClient";
 import { generateDeviceId } from "../utils/fingerprint";
 import { IconPointerFilled } from "@tabler/icons-react";
-import { useLocalStorage } from '@mantine/hooks';
+import { useLocalStorage, useViewportSize } from '@mantine/hooks';
 
 const checkMessageSafety = async (message: string): Promise<boolean> => {
     try {
@@ -56,9 +56,10 @@ export function Footer() {
     >(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { width } = useViewportSize();
     const [showCursors, setShowCursors] = useLocalStorage({
         key: 'show-cursors',
-        defaultValue: true,
+        defaultValue: width > 768,
     });
 
     const colors = [

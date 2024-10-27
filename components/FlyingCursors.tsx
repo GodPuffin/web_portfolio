@@ -6,6 +6,7 @@ import { Tooltip } from "@mantine/core";
 import { supabase } from '../utils/supabaseClient';
 import { generateDeviceId } from '../utils/fingerprint';
 import { useLocalStorage } from '@mantine/hooks';
+import { useViewportSize } from '@mantine/hooks';
 
 const FlyingCursor = ({ color, message, isMobile }: { color: string; message: string; isMobile: boolean }) => {
   const [position, setPosition] = useState({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight });
@@ -94,9 +95,10 @@ const FlyingCursor = ({ color, message, isMobile }: { color: string; message: st
 export const FlyingCursors = () => {
   const [cursors, setCursors] = useState<Array<{ id: number, color: string, message: string }>>([]);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const { width } = useViewportSize();
   const [showCursors] = useLocalStorage({
     key: 'show-cursors',
-    defaultValue: true,
+    defaultValue: width > 768,
   });
 
   const fetchCursors = useCallback(async (currentDeviceId: string | null) => {
