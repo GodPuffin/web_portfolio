@@ -14,6 +14,7 @@ import {
     Paper,
     rem,
     Stack,
+    Switch,
     Text,
     TextInput,
     Tooltip,
@@ -21,6 +22,7 @@ import {
 import { supabase } from "../utils/supabaseClient";
 import { generateDeviceId } from "../utils/fingerprint";
 import { IconPointerFilled } from "@tabler/icons-react";
+import { useLocalStorage } from '@mantine/hooks';
 
 const checkMessageSafety = async (message: string): Promise<boolean> => {
     try {
@@ -54,6 +56,10 @@ export function Footer() {
     >(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [showCursors, setShowCursors] = useLocalStorage({
+        key: 'show-cursors',
+        defaultValue: true,
+    });
 
     const colors = [
         "orange",
@@ -163,13 +169,26 @@ export function Footer() {
                         <Text size="sm" c="dimmed">
                             Made by Marcus Lee.
                         </Text>
-                        <Button
-                            onClick={() => setModalOpened(true)}
-                            variant="default"
-                            fw={400}
-                        >
-                            {userCursor ? "Edit Message" : "Add Message"}
-                        </Button>
+                        <Group>
+                            <Button
+                                onClick={() => setModalOpened(true)}
+                                variant="default"
+                                fw={400}
+                            >
+                                {userCursor ? "Edit Message" : "Add Message"}
+                            </Button>
+                            {userCursor && userCursor.message ? (
+                                <Tooltip label={userCursor.message} position="top" color={selectedColor || 'blue'}>
+                                    <IconPointerFilled size={20} color={`var(--mantine-color-${selectedColor || 'blue'}-6)`} />
+                                </Tooltip>
+                            ) : (
+                                <IconPointerFilled size={20} color={`var(--mantine-color-${selectedColor || 'blue'}-6)`} />
+                            )}
+                            <Switch 
+                                checked={showCursors}
+                                onChange={(event) => setShowCursors(event.currentTarget.checked)}
+                            />
+                        </Group>
                         <Text size="sm" c="dimmed">
                             Updated on 2024-10-26
                         </Text>

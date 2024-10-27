@@ -5,10 +5,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { Tooltip } from "@mantine/core";
 import { supabase } from '../utils/supabaseClient';
 import { generateDeviceId } from '../utils/fingerprint';
+import { useLocalStorage } from '@mantine/hooks';
 
-const FlyingCursor = ({ color, message }: { color: string; message: string }) => {
+const FlyingCursor = ({ color, message, isMobile }: { color: string; message: string; isMobile: boolean }) => {
   const [position, setPosition] = useState({ x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight });
-  const [velocity, setVelocity] = useState({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1 });
+  const [velocity, setVelocity] = useState({ x: (Math.random() * 2 - 1) * (isMobile ? 0.5 : 1), y: (Math.random() * 2 - 1) * (isMobile ? 0.5 : 1) });
   const [acceleration, setAcceleration] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
@@ -41,10 +42,10 @@ const FlyingCursor = ({ color, message }: { color: string; message: string }) =>
 
     // Limit velocity
     const speed = Math.sqrt(velocity.x ** 2 + velocity.y ** 2);
-    if (speed > 5) {
+    if (speed > (isMobile ? 2.5 : 5)) {
       setVelocity(prev => ({
-        x: (prev.x / speed) * 5,
-        y: (prev.y / speed) * 5
+        x: (prev.x / speed) * (isMobile ? 2.5 : 5),
+        y: (prev.y / speed) * (isMobile ? 2.5 : 5)
       }));
     }
 
@@ -55,7 +56,7 @@ const FlyingCursor = ({ color, message }: { color: string; message: string }) =>
         y: (Math.random() - 0.5) * 0.2
       });
     }
-  }, [velocity, acceleration]);
+  }, [velocity, acceleration, isMobile]);
 
   useEffect(() => {
     const moveInterval = setInterval(updatePosition, 16);
@@ -93,6 +94,10 @@ const FlyingCursor = ({ color, message }: { color: string; message: string }) =>
 export const FlyingCursors = () => {
   const [cursors, setCursors] = useState<Array<{ id: number, color: string, message: string }>>([]);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [showCursors] = useLocalStorage({
+    key: 'show-cursors',
+    defaultValue: true,
+  });
 
   const fetchCursors = useCallback(async (currentDeviceId: string | null) => {
     if (!currentDeviceId) return;
@@ -159,10 +164,16 @@ export const FlyingCursors = () => {
     return array;
   };
 
+  const isMobile = window.innerWidth <= 768;
+
+  if (!showCursors) {
+    return null;
+  }
+
   return (
     <>
       {cursors.map((cursor) => (
-        <FlyingCursor key={cursor.id} color={cursor.color} message={cursor.message} />
+        <FlyingCursor key={cursor.id} color={cursor.color} message={cursor.message} isMobile={isMobile} />
       ))}
     </>
   );
