@@ -30,7 +30,8 @@ export function Welcome() {
             }
           }}
         >
-          Hello, I&apos;m Marcus <span style={{ display: "inline-block" }}>👋</span>
+          Hello, I&apos;m Marcus{" "}
+          <span style={{ display: "inline-block" }}>👋</span>
         </Title>
       </Container>
       <Text size="lg" style={{ zIndex: 5 }}>
@@ -40,10 +41,9 @@ export function Welcome() {
           University of British Columbia
         </Text>, with a background in{" "}
         <Text span c="green" inherit>Computer Science</Text> and{" "}
-        <Text span c="orange" inherit>Math</Text>. I&apos;m passionate about creating
-        {" "}
-        <Text span c="indigo" inherit>innovative solutions</Text> across{" "}
-        <Text span c="red" inherit>mechanical</Text>,{" "}
+        <Text span c="orange" inherit>Math</Text>. I&apos;m passionate about
+        creating <Text span c="indigo" inherit>innovative solutions</Text>{" "}
+        across <Text span c="red" inherit>mechanical</Text>,{" "}
         <Text span c="violet" inherit>electrical</Text>, and{" "}
         <Text span c="cyan" inherit>software engineering</Text>, with a recent
         focus on developing <Text span c="pink" inherit>AI tools</Text>{" "}

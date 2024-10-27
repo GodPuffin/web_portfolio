@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme, MantineColorsTuple } from '@mantine/core';
+import { createTheme, MantineColorsTuple } from "@mantine/core";
 
 const CustomColors: MantineColorsTuple = [
   "#ebfaff",
@@ -12,14 +12,14 @@ const CustomColors: MantineColorsTuple = [
   "#44c0f7",
   "#38a9dc",
   "#2996c5",
-  "#0082ad"
-]
+  "#0082ad",
+];
 
 export const theme = createTheme({
   colors: {
     CustomColors,
   },
   autoContrast: true,
-  defaultRadius: 'lg',
-  fontFamily: 'Neue Montreal, sans-serif',
+  defaultRadius: "lg",
+  fontFamily: "Neue Montreal, sans-serif",
 });

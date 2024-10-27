@@ -1,13 +1,22 @@
 "use client";
 
-import { Title, Stack, Card, Text, Transition, Container, Group, Image } from '@mantine/core';
-import { useState } from 'react';
-import { useMantineColorScheme } from '@mantine/core';
+import {
+  Card,
+  Container,
+  Group,
+  Image,
+  Stack,
+  Text,
+  Title,
+  Transition,
+} from "@mantine/core";
+import { useState } from "react";
+import { useMantineColorScheme } from "@mantine/core";
 
 const floatTransition = {
-  in: { transform: 'translateY(0) rotate(0deg)' },
-  out: { transform: 'translateY(-10px) rotate(-2deg)' },
-  transitionProperty: 'transform',
+  in: { transform: "translateY(0) rotate(0deg)" },
+  out: { transform: "translateY(-10px) rotate(-2deg)" },
+  transitionProperty: "transform",
 };
 
 interface ExperienceCardProps {
@@ -21,7 +30,18 @@ interface ExperienceCardProps {
   darkLogo?: string;
 }
 
-function ExperienceCard({ company, position, dateRange, description, rotation, zIndex, logo, darkLogo }: ExperienceCardProps) {
+function ExperienceCard(
+  {
+    company,
+    position,
+    dateRange,
+    description,
+    rotation,
+    zIndex,
+    logo,
+    darkLogo,
+  }: ExperienceCardProps,
+) {
   const [hovered, setHovered] = useState(false);
   const { colorScheme } = useMantineColorScheme();
 
@@ -36,36 +56,36 @@ function ExperienceCard({ company, position, dateRange, description, rotation, z
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           style={{
-            width: '100%',
-            maxWidth: '300px',
-            margin: '20px 0',
-            transition: 'all 0.3s ease-in-out',
-            transform: `rotate(${hovered ? '0' : rotation}deg) translateY(${hovered ? '-10px' : '0'}) scale(${hovered ? '1.05' : '1'})`,
+            width: "100%",
+            maxWidth: "300px",
+            margin: "20px 0",
+            transition: "all 0.3s ease-in-out",
+            transform: `rotate(${hovered ? "0" : rotation}deg) translateY(${
+              hovered ? "-10px" : "0"
+            }) scale(${hovered ? "1.05" : "1"})`,
             boxShadow: hovered
-              ? '0 8px 16px rgba(0,0,0,0.2)'
-              : '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
+              ? "0 8px 16px rgba(0,0,0,0.2)"
+              : "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
             zIndex: hovered ? 10 : zIndex,
             marginLeft: `-${40 - zIndex * 10}px`,
           }}
         >
           <Card.Section p="md">
-              {(logo || darkLogo) && (
-                <Image 
-                  src={colorScheme === 'dark' && darkLogo ? darkLogo : logo} 
-                  alt={company} 
-                  width={50} 
-                  height={50} 
-                  fit="contain" 
-                  mb="xs"
-                />
-              )}
-              <div>
-                {!logo && !darkLogo && (
-                  <Text size="lg">{company}</Text>
-                )}
-                <Text size="sm" c="dimmed">{position}</Text>
-                <Text size="sm">{dateRange}</Text>
-              </div>
+            {(logo || darkLogo) && (
+              <Image
+                src={colorScheme === "dark" && darkLogo ? darkLogo : logo}
+                alt={company}
+                width={50}
+                height={50}
+                fit="contain"
+                mb="xs"
+              />
+            )}
+            <div>
+              {!logo && !darkLogo && <Text size="lg">{company}</Text>}
+              <Text size="sm" c="dimmed">{position}</Text>
+              <Text size="sm">{dateRange}</Text>
+            </div>
           </Card.Section>
           <Text size="sm" mt="md">{description}</Text>
         </Card>
@@ -81,7 +101,11 @@ export function Experience() {
         <Container size="xs" style={{ zIndex: 5 }}>
           <Title order={2} ta="center">Experience 📝</Title>
         </Container>
-        <Group justify="center" align="flex-start" style={{ position: 'relative' }}>
+        <Group
+          justify="center"
+          align="flex-start"
+          style={{ position: "relative" }}
+        >
           <ExperienceCard
             company="Fundica"
             position="Software Developer Intern"

@@ -1,4 +1,4 @@
-import * as FingerprintJS from '@fingerprintjs/fingerprintjs';
+import * as FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 let fpPromise: Promise<FingerprintJS.Agent> | null = null;
 let cachedDeviceId: string | null = null;
