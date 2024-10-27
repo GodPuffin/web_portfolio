@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ActionIcon, Container, Group, Paper, Text, Drawer, Stack, Button } from "@mantine/core";
-import { IconBrandGithub, IconBrandInstagram, IconBrandLinkedin, IconDownload, IconMail, IconMenu2, IconMoonStars, IconSun } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandInstagram, IconBrandLinkedin, IconCategory2, IconDownload, IconMail, IconMoonStars, IconSun } from "@tabler/icons-react";
 import { useMediaQuery } from '@mantine/hooks';
 import { useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import styles from './Navbar.module.css';
@@ -32,7 +32,7 @@ export function Navbar() {
                         <Text ml="md" size="lg" className={styles.name} c={colorScheme === 'dark' ? 'white' : 'dark'}>Marcus Lee</Text>
                         {isMobile ? (
                             <ActionIcon onClick={() => setDrawerOpened(true)} size="lg" variant="transparent" color={colorScheme === 'dark' ? 'white' : 'dark'} aria-label="Open menu">
-                                <IconMenu2 size={24} />
+                                <IconCategory2 size={24} />
                             </ActionIcon>
                         ) : (
                             <Group className={styles.iconGroup}>
