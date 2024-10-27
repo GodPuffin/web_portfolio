@@ -116,8 +116,10 @@ export const FlyingCursors = () => {
     if (otherCursorsError) {
       console.error('Error fetching other cursors:', otherCursorsError);
     } else {
-      // Randomly select 15 cursors from the fetched ones
-      const randomCursors = otherCursors ? shuffleArray(otherCursors).slice(0, 15) : [];
+      const isMobile = window.innerWidth <= 768;
+      const cursorLimit = isMobile ? 6 : 15;
+
+      const randomCursors = otherCursors ? shuffleArray(otherCursors).slice(0, cursorLimit) : [];
       const allCursors = currentDeviceCursor 
         ? [currentDeviceCursor, ...randomCursors]
         : randomCursors;
