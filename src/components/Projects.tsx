@@ -284,7 +284,7 @@ export function Projects() {
                         ]}
                         rotation={4}
                         zIndex={2}
-                        githubLink="https://github.com/yourusername/offseason-swerve-drive"
+                        githubLink="https://github.com/GodPuffin/Swervy"
                     />
                     <ProjectCard
                         title="FPV Drones"
