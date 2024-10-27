@@ -228,15 +228,23 @@ export function Footer() {
                     </Grid.Col>
                     <Grid.Col span={5}>
                         <Center h="100%">
-                            <Tooltip label={message} color={selectedColor}>
+                            {message ? (
+                                <Tooltip label={message} color={selectedColor || 'red'} opened>
+                                    <IconPointerFilled
+                                        size={50}
+                                        style={{
+                                            color: `var(--mantine-color-${selectedColor || 'red'}-6)`,
+                                        }}
+                                    />
+                                </Tooltip>
+                            ) : (
                                 <IconPointerFilled
-                                size={50}
-                                style={{
-                                    color:
-                                        `var(--mantine-color-${selectedColor}-6)`,
+                                    size={50}
+                                    style={{
+                                        color: `var(--mantine-color-${selectedColor || 'red'}-6)`,
                                     }}
                                 />
-                            </Tooltip>
+                            )}
                         </Center>
                     </Grid.Col>
                 </Grid>
