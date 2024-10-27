@@ -2890,9 +2890,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mantine-minimal-next-template@workspace:.":
+"marcus-website@workspace:.":
   version: 0.0.0-use.local
-  resolution: "mantine-minimal-next-template@workspace:."
+  resolution: "marcus-website@workspace:."
   dependencies:
     "@fingerprintjs/fingerprintjs": "npm:^4.5.1"
     "@mantine/core": "npm:7.13.4"
