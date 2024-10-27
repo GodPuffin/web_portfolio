@@ -94,30 +94,7 @@ export const FlyingCursors = () => {
   const [cursors, setCursors] = useState<Array<{ id: number, color: string, message: string }>>([]);
   const [deviceId, setDeviceId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const initializeDeviceId = async () => {
-      let id = localStorage.getItem('deviceId');
-      if (!id) {
-        id = await generateDeviceId();
-        localStorage.setItem('deviceId', id);
-      }
-      setDeviceId(id);
-      fetchCursors(id);
-    };
-
-    initializeDeviceId();
-
-    const channel = supabase
-      .channel('cursors')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'cursors' }, (payload) => fetchCursors(deviceId))
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const fetchCursors = async (currentDeviceId: string | null) => {
+  const fetchCursors = useCallback(async (currentDeviceId: string | null) => {
     if (!currentDeviceId) return;
 
     const { data: currentDeviceCursor, error: currentDeviceError } = await supabase
@@ -146,7 +123,30 @@ export const FlyingCursors = () => {
         : randomCursors;
       setCursors(allCursors);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const initializeDeviceId = async () => {
+      let id = localStorage.getItem('deviceId');
+      if (!id) {
+        id = await generateDeviceId();
+        localStorage.setItem('deviceId', id);
+      }
+      setDeviceId(id);
+      fetchCursors(id);
+    };
+
+    initializeDeviceId();
+
+    const channel = supabase
+      .channel('cursors')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cursors' }, () => fetchCursors(deviceId))
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [deviceId, fetchCursors]);
 
   // Helper function to shuffle an array
   const shuffleArray = <T,>(array: T[]): T[] => {
