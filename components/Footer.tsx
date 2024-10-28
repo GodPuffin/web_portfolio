@@ -159,7 +159,10 @@ export function Footer() {
   };
 
   return (
-    <div style={{ zIndex: 100 }}>
+    <div style={{ 
+      position: 'relative',
+      zIndex: 3,
+    }}>
       <Paper
         p="md"
         withBorder

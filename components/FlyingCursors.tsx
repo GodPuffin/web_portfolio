@@ -6,6 +6,7 @@ import { Tooltip } from "@mantine/core";
 import { supabase } from "../utils/supabaseClient";
 import { generateDeviceId } from "../utils/fingerprint";
 import { useLocalStorage } from "@mantine/hooks";
+import { motion } from "framer-motion";
 
 const FlyingCursor = (
   { color, message, isMobile }: {
@@ -84,21 +85,34 @@ const FlyingCursor = (
       color={color}
       opened={isHovered}
     >
-      <IconPointerFilled
+      <motion.div
         style={{
           position: "fixed",
-          left: position.x,
-          top: position.y,
-          transform: `rotate(${angle}deg)`,
-          color: `var(--mantine-color-${color}-6)`,
-          transition: "all 0.1s linear",
+          left: 0,
+          top: 0,
           pointerEvents: "auto",
-          zIndex: 1,
-          cursor: "pointer",
+          zIndex: 2,
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      />
+        animate={{
+          x: position.x,
+          y: position.y,
+          rotate: angle,
+        }}
+        transition={{
+          type: "tween",
+          ease: "linear",
+          duration: 0.1
+        }}
+      >
+        <IconPointerFilled
+          style={{
+            color: `var(--mantine-color-${color}-6)`,
+            cursor: "pointer",
+          }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        />
+      </motion.div>
     </Tooltip>
   );
 };

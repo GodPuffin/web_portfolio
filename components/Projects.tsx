@@ -10,17 +10,13 @@ import {
   Stack,
   Text,
   Title,
-  Transition,
   useMantineColorScheme,
 } from "@mantine/core";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { IconBrandGithub, IconCode, IconWorld } from "@tabler/icons-react";
-
-const floatTransition = {
-  in: { transform: "translateY(0) rotate(0deg)" },
-  out: { transform: "translateY(-10px) rotate(-2deg)" },
-  transitionProperty: "transform",
-};
+import { motion } from "framer-motion";
+import { useInView } from "framer-motion";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface ProjectCardProps {
   title: string;
@@ -35,6 +31,7 @@ interface ProjectCardProps {
   githubLink?: string;
   devpostLink?: string;
   websiteLink?: string;
+  index: number;
 }
 
 function ProjectCard({
@@ -50,9 +47,18 @@ function ProjectCard({
   githubLink,
   devpostLink,
   websiteLink,
+  index,
 }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const { colorScheme } = useMantineColorScheme();
+  const ref = useRef(null);
+  const isInView = useInView(ref, { 
+    once: true,
+    amount: "some" 
+  });
+
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const transitionDelay = isMobile ? 0.2 : index * 0.15;
 
   const getBadgeColor = (tech: string) => {
     switch (tech.toLowerCase()) {
@@ -91,135 +97,158 @@ function ProjectCard({
   };
 
   return (
-    <Transition mounted={true} transition={floatTransition} duration={300}>
-      {() => (
-        <Card
-          shadow="sm"
-          padding="lg"
-          radius="md"
-          withBorder
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          style={{
-            width: "100%",
-            maxWidth: "300px",
-            margin: "20px 0",
-            transition: "all 0.3s ease-in-out",
-            transform: `rotate(${hovered ? "0" : rotation}deg) translateY(${
-              hovered ? "-10px" : "0"
-            }) scale(${hovered ? "1.05" : "1"})`,
-            boxShadow: hovered
-              ? "0 8px 16px rgba(0,0,0,0.2)"
-              : "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-            zIndex: hovered ? 10 : zIndex,
-            marginLeft: `-${40 - zIndex * 10}px`,
-          }}
-        >
-          <Card.Section p="md">
-            <Group>
-              {logo
-                ? (
-                  <Image
-                    src={colorScheme === "dark" && darkLogo ? darkLogo : logo}
-                    alt={title}
-                    width={50}
-                    height={50}
-                    fit="contain"
-                    mb="xs"
-                  />
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{
+        duration: 0.5,
+        delay: transitionDelay,
+      }}
+      style={{ 
+        position: 'relative',
+        zIndex: isInView ? 2 : 0
+      }}
+    >
+      <Card
+        shadow="sm"
+        padding="lg"
+        radius="md"
+        withBorder
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        style={{
+          width: "100%",
+          maxWidth: "300px",
+          margin: "20px 0",
+          transition: "all 0.3s ease-in-out",
+          transform: `rotate(${hovered ? "0" : rotation}deg) translateY(${
+            hovered ? "-10px" : "0"
+          }) scale(${hovered ? "1.05" : "1"})`,
+          boxShadow: hovered
+            ? "0 8px 16px rgba(0,0,0,0.2)"
+            : "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
+          zIndex: hovered ? 10 : zIndex,
+          marginLeft: `-${40 - zIndex * 10}px`,
+        }}
+      >
+        <Card.Section p="md">
+          <Group>
+            {logo
+              ? (
+                <Image
+                  src={colorScheme === "dark" && darkLogo ? darkLogo : logo}
+                  alt={title}
+                  width={50}
+                  height={50}
+                  fit="contain"
+                  mb="xs"
+                />
                 )
                 : <Text size="lg" fw={500}>{title}</Text>}
-              {githubLink && (
-                <ActionIcon
-                  component="a"
-                  href={githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  c="dimmed"
-                  variant="transparent"
-                  size="sm"
-                >
-                  <IconBrandGithub size={20} stroke={1.5} />
-                </ActionIcon>
-              )}
-              {devpostLink && (
-                <ActionIcon
-                  component="a"
-                  href={devpostLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  c="dimmed"
-                  variant="transparent"
-                  size="sm"
-                >
-                  <IconCode size={20} stroke={1.5} />
-                </ActionIcon>
-              )}
-              {websiteLink && (
-                <ActionIcon
-                  component="a"
-                  href={websiteLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  c="dimmed"
-                  variant="transparent"
-                  size="sm"
-                >
-                  <IconWorld size={20} stroke={1.5} />
-                </ActionIcon>
-              )}
-            </Group>
-          </Card.Section>
-          {youtubeEmbed
-            ? (
-              <Card.Section>
-                <iframe
-                  width="100%"
-                  height="160"
-                  src={youtubeEmbed}
-                  title={`${title} YouTube video`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                >
-                </iframe>
-              </Card.Section>
-            )
-            : image && (
-              <Card.Section>
-                <Image
-                  src={image}
-                  height={160}
-                  alt={`${title} project screenshot`}
-                  fit="cover"
-                />
-              </Card.Section>
-            )}
-          <Text size="sm">{description}</Text>
-          <Group mt="md" gap="xs">
-            {technologies.map((tech, index) => (
-              <Badge
-                key={index}
-                variant="light"
+            {githubLink && (
+              <ActionIcon
+                component="a"
+                href={githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                c="dimmed"
+                variant="transparent"
                 size="sm"
-                fw={300}
-                color={getBadgeColor(tech)}
               >
-                {tech}
-              </Badge>
-            ))}
+                <IconBrandGithub size={20} stroke={1.5} />
+              </ActionIcon>
+            )}
+            {devpostLink && (
+              <ActionIcon
+                component="a"
+                href={devpostLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                c="dimmed"
+                variant="transparent"
+                size="sm"
+              >
+                <IconCode size={20} stroke={1.5} />
+              </ActionIcon>
+            )}
+            {websiteLink && (
+              <ActionIcon
+                component="a"
+                href={websiteLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                c="dimmed"
+                variant="transparent"
+                size="sm"
+              >
+                <IconWorld size={20} stroke={1.5} />
+              </ActionIcon>
+            )}
           </Group>
-        </Card>
-      )}
-    </Transition>
+        </Card.Section>
+        {youtubeEmbed
+          ? (
+            <Card.Section>
+              <iframe
+                width="100%"
+                height="160"
+                src={youtubeEmbed}
+                title={`${title} YouTube video`}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              >
+              </iframe>
+            </Card.Section>
+          )
+          : image && (
+            <Card.Section>
+              <Image
+                src={image}
+                height={160}
+                alt={`${title} project screenshot`}
+                fit="cover"
+              />
+            </Card.Section>
+          )}
+        <Text size="sm">{description}</Text>
+        <Group mt="md" gap="xs">
+          {technologies.map((tech, index) => (
+            <Badge
+              key={index}
+              variant="light"
+              size="sm"
+              fw={300}
+              color={getBadgeColor(tech)}
+            >
+              {tech}
+            </Badge>
+          ))}
+        </Group>
+      </Card>
+    </motion.div>
   );
 }
 
 export function Projects() {
+  const headerRef = useRef(null);
+  const isHeaderInView = useInView(headerRef, { 
+    once: true,
+    amount: 0.3 
+  });
+
   return (
     <Container size="md">
       <Stack gap="xl" mt={50} mb={50}>
         <Container size="xs" style={{ zIndex: 5 }}>
-          <Title order={2} ta="center">Projects 🚀</Title>
+          <motion.div
+            ref={headerRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Title order={2} ta="center">Projects 🚀</Title>
+          </motion.div>
         </Container>
         <Group
           justify="center"
@@ -233,6 +262,7 @@ export function Projects() {
             rotation={-5}
             zIndex={6}
             devpostLink="https://devpost.com/software/txt2cad"
+            index={0}
           />
           <ProjectCard
             title="Northern Knights 2024"
@@ -246,6 +276,7 @@ export function Projects() {
             rotation={6}
             zIndex={5}
             githubLink="https://github.com/FRC296/FRC-2024"
+            index={1}
           />
           <ProjectCard
             title="Linky AI"
@@ -260,6 +291,7 @@ export function Projects() {
             zIndex={4}
             websiteLink="https://linky.im"
             githubLink="https://github.com/GodPuffin/linky"
+            index={2}
           />
           <ProjectCard
             title="Pharmahacks 2024"
@@ -272,6 +304,7 @@ export function Projects() {
             rotation={2}
             zIndex={3}
             githubLink="https://github.com/GodPuffin/Pharmahacks2024"
+            index={3}
           />
           <ProjectCard
             title="Offseason Swerve Drive"
@@ -284,6 +317,7 @@ export function Projects() {
             rotation={4}
             zIndex={2}
             githubLink="https://github.com/GodPuffin/Swervy"
+            index={4}
           />
           <ProjectCard
             title="FPV Drones"
@@ -296,6 +330,7 @@ export function Projects() {
             ]}
             rotation={-5}
             zIndex={1}
+            index={5}
           />
           <ProjectCard
             title="FRC Trades"
@@ -308,6 +343,7 @@ export function Projects() {
             rotation={10}
             zIndex={5}
             githubLink="https://github.com/GodPuffin/frctrades"
+            index={6}
           />
         </Group>
       </Stack>
