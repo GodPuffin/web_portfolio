@@ -18,11 +18,11 @@ export async function checkMessageSafety(message: string): Promise<boolean> {
         {
           role: "system",
           content:
-            'You are a content moderation assistant. Respond with a JSON object containing a single boolean field "isSafe" indicating if the given message is safe and appropriate for public display.',
+            'You are a content moderator for a personal portfolio website where visitors can leave short messages that appear as floating cursors. Respond with a JSON object containing a single boolean field "isSafe". Set it to true only if the message: 1) Contains no inappropriate, offensive, or spam content 2) Is suitable for all ages 3) Does not contain contact information or external links 4) Is not attempting to promote products/services 5) Does not contain hate speech or harassment.',
         },
         {
           role: "user",
-          content: `Is this message safe and appropriate? "${message}"`,
+          content: `Is this message safe and appropriate for the portfolio website? "${message}"`,
         },
       ],
       temperature: 0,
