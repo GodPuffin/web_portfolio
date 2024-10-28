@@ -25,6 +25,7 @@ interface ExperienceCardProps {
   logo?: string;
   darkLogo?: string;
   index: number;
+  isGroupInView: boolean;
 }
 
 function ExperienceCard(
@@ -38,6 +39,7 @@ function ExperienceCard(
     logo,
     darkLogo,
     index,
+    isGroupInView,
   }: ExperienceCardProps,
 ) {
   const [hovered, setHovered] = useState(false);
@@ -112,9 +114,15 @@ function ExperienceCard(
 
 export function Experience() {
   const headerRef = useRef(null);
+  const experienceRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { 
     once: true,
     amount: 0.3 
+  });
+  
+  const isGroupInView = useInView(experienceRef, {
+    once: true,
+    amount: 0.1
   });
 
   return (
@@ -131,6 +139,7 @@ export function Experience() {
           </motion.div>
         </Container>
         <Group
+          ref={experienceRef}
           justify="center"
           align="flex-start"
           style={{ position: "relative" }}
@@ -145,6 +154,7 @@ export function Experience() {
             logo="/Fundica-Logo.svg"
             darkLogo="/Fundica-Logo-Dark.svg"
             index={2}
+            isGroupInView={isGroupInView}
           />
           <ExperienceCard
             company="Lac Marois Country Club"
@@ -154,6 +164,7 @@ export function Experience() {
             rotation={-2}
             zIndex={2}
             index={3}
+            isGroupInView={isGroupInView}
           />
           <ExperienceCard
             company="296 - The Northern Knights"
@@ -163,6 +174,7 @@ export function Experience() {
             rotation={10}
             zIndex={1}
             index={4}
+            isGroupInView={isGroupInView}
           />
         </Group>
       </Stack>

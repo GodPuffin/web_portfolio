@@ -86,22 +86,25 @@ const FlyingCursor = (
       opened={isHovered}
     >
       <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          x: position.x,
+          y: position.y,
+          rotate: angle,
+          opacity: 1
+        }}
+        transition={{
+          type: "tween",
+          ease: "linear",
+          duration: 0.1,
+          opacity: { duration: 0.5, delay: 0.5 }
+        }}
         style={{
           position: "fixed",
           left: 0,
           top: 0,
           pointerEvents: "auto",
           zIndex: 2,
-        }}
-        animate={{
-          x: position.x,
-          y: position.y,
-          rotate: angle,
-        }}
-        transition={{
-          type: "tween",
-          ease: "linear",
-          duration: 0.1
         }}
       >
         <IconPointerFilled

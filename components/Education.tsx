@@ -12,6 +12,7 @@ import {
 } from "@mantine/core";
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface EducationCardProps {
   institution: string;
@@ -23,6 +24,7 @@ interface EducationCardProps {
   logo?: string;
   darkLogo?: string;
   index: number;
+  isGroupInView: boolean;
 }
 
 function EducationCard(
@@ -36,6 +38,7 @@ function EducationCard(
     logo,
     darkLogo,
     index,
+    isGroupInView,
   }: EducationCardProps,
 ) {
   const [hovered, setHovered] = useState(false);
@@ -46,6 +49,9 @@ function EducationCard(
     amount: "some" 
   });
 
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const transitionDelay = isMobile ? 0.2 : index * 0.15;
+
   return (
     <motion.div
       ref={ref}
@@ -53,7 +59,7 @@ function EducationCard(
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
         duration: 0.5,
-        delay: index * 0.2,
+        delay: transitionDelay,
       }}
       style={{ 
         position: 'relative',
@@ -107,9 +113,15 @@ function EducationCard(
 
 export function Education() {
   const headerRef = useRef(null);
+  const educationRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { 
     once: true,
     amount: 0.3 
+  });
+  
+  const isGroupInView = useInView(educationRef, {
+    once: true,
+    amount: 0.1
   });
 
   return (
@@ -126,6 +138,7 @@ export function Education() {
           </motion.div>
         </Container>
         <Group
+          ref={educationRef}
           justify="center"
           align="flex-start"
           style={{ position: "relative" }}
@@ -139,6 +152,7 @@ export function Education() {
             logo="/UBC-Logo.svg"
             darkLogo="/UBC-Logo-Dark.svg"
             index={0}
+            isGroupInView={isGroupInView}
           />
           <EducationCard
             institution="Vanier College"
@@ -147,6 +161,7 @@ export function Education() {
             rotation={-2}
             zIndex={2}
             index={1}
+            isGroupInView={isGroupInView}
           />
           <EducationCard
             institution="Loyola High School"
@@ -154,6 +169,7 @@ export function Education() {
             rotation={10}
             zIndex={1}
             index={2}
+            isGroupInView={isGroupInView}
           />
         </Group>
       </Stack>

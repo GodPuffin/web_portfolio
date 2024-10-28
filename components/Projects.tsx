@@ -32,6 +32,7 @@ interface ProjectCardProps {
   devpostLink?: string;
   websiteLink?: string;
   index: number;
+  isGroupInView: boolean;
 }
 
 function ProjectCard({
@@ -48,16 +49,19 @@ function ProjectCard({
   devpostLink,
   websiteLink,
   index,
+  isGroupInView,
 }: ProjectCardProps) {
   const [hovered, setHovered] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const isCardInView = useInView(ref, { 
     once: true,
     amount: "some" 
   });
 
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const shouldAnimate = isMobile ? isCardInView : isGroupInView;
   const transitionDelay = isMobile ? 0.2 : index * 0.15;
 
   const getBadgeColor = (tech: string) => {
@@ -100,14 +104,14 @@ function ProjectCard({
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      animate={shouldAnimate ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{
         duration: 0.5,
         delay: transitionDelay,
       }}
       style={{ 
         position: 'relative',
-        zIndex: isInView ? 2 : 0
+        zIndex: isCardInView ? 2 : 0
       }}
     >
       <Card
@@ -232,9 +236,15 @@ function ProjectCard({
 
 export function Projects() {
   const headerRef = useRef(null);
+  const projectsRef = useRef(null);
   const isHeaderInView = useInView(headerRef, { 
     once: true,
     amount: 0.3 
+  });
+
+  const isProjectsInView = useInView(projectsRef, {
+    once: true,
+    amount: 0.1
   });
 
   return (
@@ -245,12 +255,13 @@ export function Projects() {
             ref={headerRef}
             initial={{ opacity: 0, y: 20 }}
             animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Title order={2} ta="center">Projects 🚀</Title>
           </motion.div>
         </Container>
         <Group
+          ref={projectsRef}
           justify="center"
           align="flex-start"
           style={{ position: "relative" }}
@@ -262,7 +273,8 @@ export function Projects() {
             rotation={-5}
             zIndex={6}
             devpostLink="https://devpost.com/software/txt2cad"
-            index={0}
+            index={2}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="Northern Knights 2024"
@@ -276,7 +288,8 @@ export function Projects() {
             rotation={6}
             zIndex={5}
             githubLink="https://github.com/FRC296/FRC-2024"
-            index={1}
+            index={3}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="Linky AI"
@@ -291,7 +304,8 @@ export function Projects() {
             zIndex={4}
             websiteLink="https://linky.im"
             githubLink="https://github.com/GodPuffin/linky"
-            index={2}
+            index={4}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="Pharmahacks 2024"
@@ -304,7 +318,8 @@ export function Projects() {
             rotation={2}
             zIndex={3}
             githubLink="https://github.com/GodPuffin/Pharmahacks2024"
-            index={3}
+            index={5}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="Offseason Swerve Drive"
@@ -317,7 +332,8 @@ export function Projects() {
             rotation={4}
             zIndex={2}
             githubLink="https://github.com/GodPuffin/Swervy"
-            index={4}
+            index={6}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="FPV Drones"
@@ -330,7 +346,8 @@ export function Projects() {
             ]}
             rotation={-5}
             zIndex={1}
-            index={5}
+            index={7}
+            isGroupInView={isProjectsInView}
           />
           <ProjectCard
             title="FRC Trades"
@@ -343,7 +360,8 @@ export function Projects() {
             rotation={10}
             zIndex={5}
             githubLink="https://github.com/GodPuffin/frctrades"
-            index={6}
+            index={8}
+            isGroupInView={isProjectsInView}
           />
         </Group>
       </Stack>
