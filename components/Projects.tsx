@@ -93,6 +93,7 @@ function ProjectCard({
       case "electronics":
       case "firmware":
         return "yellow";
+      case "sql":
       case "postgres":
         return "blue";
       default:
@@ -282,7 +283,7 @@ export function Projects() {
             technologies={[
               "Java",
               "Robotics",
-              "Engineering",
+              "CAD",
               "Computer Vision",
             ]}
             rotation={6}
@@ -322,16 +323,17 @@ export function Projects() {
             isGroupInView={isProjectsInView}
           />
           <ProjectCard
-            title="Offseason Swerve Drive"
-            description="Mentored students in building a swerve drive mini bot as a proof of concept, focusing on CAD design, assembly, and rigorous testing to refine performance."
+            title="Made by Kate"
+            description="Built a complete ecommerce website for a friend's hobby business using Next.js and Stripe."
             technologies={[
-              "Java",
-              "Robotics",
-              "CAD",
+              "TypeScript",
+              "SQL",
+              "Web Development",
             ]}
             rotation={4}
             zIndex={2}
-            githubLink="https://github.com/GodPuffin/Swervy"
+            websiteLink="https://madebykate.ca"
+            githubLink="https://github.com/GodPuffin/made-by-kate"
             index={6}
             isGroupInView={isProjectsInView}
           />

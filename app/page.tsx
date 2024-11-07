@@ -18,7 +18,10 @@ const Projects = dynamic(
   () => import("../components/Projects").then((mod) => mod.Projects),
   { ssr: false },
 );
-// const Education = dynamic(() => import("../components/Education").then(mod => mod.Education), { ssr: false });
+// const Education = dynamic(
+//   () => import("../components/Education").then((mod) => mod.Education),
+//   { ssr: false },
+// );
 const Footer = dynamic(
   () => import("../components/Footer").then((mod) => mod.Footer),
   { ssr: false },

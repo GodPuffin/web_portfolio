@@ -208,7 +208,7 @@ export function Footer() {
               />
             </Group>
             <Text size="sm" c="dimmed">
-              Updated on 2024-10-27
+              Updated on 2024-11-06
             </Text>
           </Group>
         </Container>
