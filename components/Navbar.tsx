@@ -106,6 +106,7 @@ export function Navbar() {
                       onMouseEnter={() => setHoveredIcon(item.label)}
                       onMouseLeave={() => setHoveredIcon(null)}
                       aria-label={item.label}
+                      target="_blank"
                     >
                       <item.icon
                         size={24}
