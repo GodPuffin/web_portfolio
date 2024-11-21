@@ -170,7 +170,7 @@ export function Footer() {
         <Container size="md">
           <Group justify="space-between">
             <Text size="sm" c="dimmed">
-              Made by Marcus Lee.
+              Made in Montreal 🇨🇦.
             </Text>
             <Group>
               <Button
@@ -208,7 +208,7 @@ export function Footer() {
               />
             </Group>
             <Text size="sm" c="dimmed">
-              Updated on 2024-11-06
+              Updated on 2024-11-20
             </Text>
           </Group>
         </Container>

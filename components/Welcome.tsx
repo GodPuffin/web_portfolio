@@ -64,7 +64,7 @@ export function Welcome() {
             University of British Columbia
           </Text>, with a background in{" "}
           <Text span c="green" inherit>Computer Science</Text> and{" "}
-          <Text span c="orange" inherit>Math</Text>. I&apos;m passionate about
+          <Text span c="orange" inherit>Math</Text>. I&apos;m skilled at
           creating <Text span c="indigo" inherit>innovative solutions</Text>{" "}
           across <Text span c="red" inherit>mechanical</Text>,{" "}
           <Text span c="violet" inherit>electrical</Text>, and{" "}
