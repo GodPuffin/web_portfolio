@@ -21,35 +21,29 @@ export function Welcome() {
           <Title
             ta="center"
             order={1}
-            style={{ transition: "transform 0.3s ease" }}
-            onMouseEnter={(e) => {
-              const target = e.currentTarget;
-              const emojis = ["👋", "🍁", "🤖", "💻", "🚀", "⚛️", "🔧", "🌐"];
-              let currentIndex = 0;
-              const interval = setInterval(() => {
-                currentIndex = (currentIndex + 1) % emojis.length;
-                const emojiSpan = target.querySelector("span");
-                if (emojiSpan) {
-                  emojiSpan.textContent = emojis[currentIndex];
-                }
-              }, 300);
-              target.dataset.interval = interval.toString();
-            }}
-            onMouseLeave={(e) => {
-              const target = e.currentTarget;
-              clearInterval(Number(target.dataset.interval));
-              const emojiSpan = target.querySelector("span");
-              if (emojiSpan) {
-                emojiSpan.textContent = "👋";
-              }
-            }}
           >
             Hello, I&apos;m Marcus{" "}
-            <span style={{ display: "inline-block" }}>👋</span>
+            <motion.span
+              style={{
+                display: "inline-block",
+                transformOrigin: "bottom right",
+              }}
+              animate={{ rotate: 0 }}
+              whileHover={{
+                rotate: [0, 14, -8, 14, -4, 10, 0],
+                transition: {
+                  duration: 2.5,
+                  repeat: Infinity,
+                  ease: "linear",
+                },
+              }}
+            >
+              👋
+            </motion.span>
           </Title>
         </motion.div>
       </Container>
-      
+
       <motion.div
         ref={textRef}
         initial={{ opacity: 0, y: 20 }}
@@ -58,14 +52,16 @@ export function Welcome() {
         style={{ zIndex: 5 }}
       >
         <Text size="lg">
-          I&apos;m a <Text span c="grape" inherit>Computer Engineering</Text>{" "}
+          I&apos;m a <Text span c="grape" inherit>Computer Engineering</Text>
+          {" "}
           student at the{" "}
           <Text component="a" href="https://www.ubc.ca/" c="blue" inherit>
             University of British Columbia
           </Text>, with a background in{" "}
           <Text span c="green" inherit>Computer Science</Text> and{" "}
           <Text span c="orange" inherit>Math</Text>. I&apos;m skilled at
-          creating <Text span c="indigo" inherit>innovative solutions</Text>{" "}
+          creating <Text span c="indigo" inherit>innovative solutions</Text>
+          {" "}
           across <Text span c="red" inherit>mechanical</Text>,{" "}
           <Text span c="violet" inherit>electrical</Text>, and{" "}
           <Text span c="cyan" inherit>software engineering</Text>, with a recent
