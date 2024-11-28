@@ -160,6 +160,7 @@ function ProjectCard({
                 c="dimmed"
                 variant="transparent"
                 size="sm"
+                aria-label="Github"
               >
                 <IconBrandGithub size={20} stroke={1.5} />
               </ActionIcon>
@@ -173,6 +174,7 @@ function ProjectCard({
                 c="dimmed"
                 variant="transparent"
                 size="sm"
+                aria-label="Devpost"
               >
                 <IconCode size={20} stroke={1.5} />
               </ActionIcon>
@@ -186,6 +188,7 @@ function ProjectCard({
                 c="dimmed"
                 variant="transparent"
                 size="sm"
+                aria-label="Website"
               >
                 <IconWorld size={20} stroke={1.5} />
               </ActionIcon>
