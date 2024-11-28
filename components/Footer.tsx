@@ -159,10 +159,12 @@ export function Footer() {
   };
 
   return (
-    <div style={{ 
-      position: 'relative',
-      zIndex: 3,
-    }}>
+    <div
+      style={{
+        position: "relative",
+        zIndex: 3,
+      }}
+    >
       <Paper
         p="md"
         withBorder
@@ -170,7 +172,7 @@ export function Footer() {
         <Container size="md">
           <Group justify="space-between">
             <Text size="sm" c="dimmed">
-              Made in Montreal 🇨🇦.
+              Made in Montreal.
             </Text>
             <Group>
               <Button
@@ -208,7 +210,7 @@ export function Footer() {
               />
             </Group>
             <Text size="sm" c="dimmed">
-              Updated on 2024-11-20
+              Updated on 2024-11-28
             </Text>
           </Group>
         </Container>
