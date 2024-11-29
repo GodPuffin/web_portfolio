@@ -91,13 +91,13 @@ const FlyingCursor = (
           x: position.x,
           y: position.y,
           rotate: angle,
-          opacity: 1
+          opacity: 1,
         }}
         transition={{
           type: "tween",
           ease: "linear",
           duration: 0.1,
-          opacity: { duration: 0.5, delay: 0.5 }
+          opacity: { duration: 0.5, delay: 0.5 },
         }}
         style={{
           position: "fixed",

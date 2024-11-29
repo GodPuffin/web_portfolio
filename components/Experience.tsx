@@ -45,12 +45,12 @@ function ExperienceCard(
   const [hovered, setHovered] = useState(false);
   const { colorScheme } = useMantineColorScheme();
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
+  const isInView = useInView(ref, {
     once: true,
-    amount: "some" 
+    amount: "some",
   });
 
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const transitionDelay = isMobile ? 0.2 : index * 0.15;
 
   return (
@@ -62,9 +62,9 @@ function ExperienceCard(
         duration: 0.5,
         delay: transitionDelay,
       }}
-      style={{ 
-        position: 'relative',
-        zIndex: isInView ? 2 : 0
+      style={{
+        position: "relative",
+        zIndex: isInView ? 2 : 0,
       }}
     >
       <Card
@@ -115,14 +115,14 @@ function ExperienceCard(
 export function Experience() {
   const headerRef = useRef(null);
   const experienceRef = useRef(null);
-  const isHeaderInView = useInView(headerRef, { 
+  const isHeaderInView = useInView(headerRef, {
     once: true,
-    amount: 0.3 
+    amount: 0.3,
   });
-  
+
   const isGroupInView = useInView(experienceRef, {
     once: true,
-    amount: 0.1
+    amount: 0.1,
   });
 
   return (
@@ -132,7 +132,9 @@ export function Experience() {
           <motion.div
             ref={headerRef}
             initial={{ opacity: 0, y: 20 }}
-            animate={isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={isHeaderInView
+              ? { opacity: 1, y: 0 }
+              : { opacity: 0, y: 20 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Title order={2} ta="center">Experience 📝</Title>

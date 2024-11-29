@@ -22,7 +22,8 @@ export async function checkMessageSafety(message: string): Promise<boolean> {
         },
         {
           role: "user",
-          content: `Is this message safe and appropriate for the portfolio website? "${message}"`,
+          content:
+            `Is this message safe and appropriate for the portfolio website?: "${message}"`,
         },
       ],
       temperature: 0,

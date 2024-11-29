@@ -1,10 +1,8 @@
-import { Container, Title, Text, Button } from "@mantine/core";
+import { Button, Container, Text, Title } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Link from "next/link";
 
-
 export default function NotFoundPage() {
-
   return (
     <Container style={{ textAlign: "center", marginTop: "100px" }}>
       <Title order={1}>404 - Page Not Found! 😢</Title>
