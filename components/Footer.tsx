@@ -211,7 +211,7 @@ export function Footer() {
               />
             </Group>
             <Text size="sm" c="dimmed">
-              Updated on 2024-11-28
+              {process.env.BUILD_TIME && `Updated on ${new Date(process.env.BUILD_TIME).toLocaleDateString('en-CA')}`}
             </Text>
           </Group>
         </Container>
