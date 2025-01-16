@@ -208,6 +208,7 @@ export function Footer() {
                 onChange={(event) =>
                   setShowCursors(event.currentTarget.checked)}
                 aria-label="Show cursors"
+                color={selectedColor || "blue"}
               />
             </Group>
             <Text size="sm" c="dimmed">

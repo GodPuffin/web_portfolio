@@ -147,7 +147,7 @@ export function Education() {
         >
           <EducationCard
             institution="University of British Columbia"
-            degree="BASc Computer Engineering"
+            degree="BASc, Computer Engineering"
             dateRange="2024 - Present"
             rotation={-8}
             zIndex={3}
@@ -158,18 +158,23 @@ export function Education() {
           />
           <EducationCard
             institution="Vanier College"
-            degree="DEC Computer Science & Mathematics"
+            degree="DEC, Computer Science & Mathematics"
             dateRange="2022 - 2024"
             rotation={-2}
             zIndex={2}
+            logo="/Vanier-Logo.png"
+            darkLogo="/Vanier-Logo-Dark.png"
             index={1}
             isGroupInView={isGroupInView}
           />
           <EducationCard
             institution="Loyola High School"
-            dateRange="2018 - 2022"
+            degree="High School Diploma"
+            dateRange="2017 - 2022"
             rotation={10}
             zIndex={1}
+            logo="/Loyola-Logo.png"
+            darkLogo="/Loyola-Logo-Dark.png"
             index={2}
             isGroupInView={isGroupInView}
           />

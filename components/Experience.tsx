@@ -106,7 +106,7 @@ function ExperienceCard(
             <Text size="sm">{dateRange}</Text>
           </div>
         </Card.Section>
-        <Text size="sm" mt="md">{description}</Text>
+        <Text size="sm">{description}</Text>
       </Card>
     </motion.div>
   );
