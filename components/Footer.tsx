@@ -163,6 +163,7 @@ export function Footer() {
       style={{
         position: "relative",
         zIndex: 3,
+        marginTop: "100px",
       }}
     >
       <Paper

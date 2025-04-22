@@ -55,7 +55,7 @@ export function Welcome() {
           I&apos;m a <Text span c="grape" inherit>Computer Engineering</Text>
           {" "}
           student at the{" "}
-          <Text component="a" href="https://www.ubc.ca/" c="blue" inherit>
+          <Text component="a" href="https://www.ubc.ca/" target="_blank" c="blue" inherit>
             University of British Columbia
           </Text>, with a background in{" "}
           <Text span c="green" inherit>Computer Science</Text> and{" "}

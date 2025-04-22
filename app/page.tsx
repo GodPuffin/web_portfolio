@@ -5,6 +5,7 @@ import "./main.css";
 import { Container } from "@mantine/core";
 import dynamic from "next/dynamic";
 import { useLocalStorage } from "@mantine/hooks";
+import { Suspense } from "react";
 
 const Welcome = dynamic(
   () => import("../components/Welcome").then((mod) => mod.Welcome),
@@ -26,8 +27,12 @@ const Footer = dynamic(
   () => import("../components/Footer").then((mod) => mod.Footer),
   { ssr: false },
 );
-const FlyingCursors = dynamic(
-  () => import("../components/FlyingCursors").then((mod) => mod.FlyingCursors),
+// const FlyingCursors = dynamic(
+//   () => import("../components/FlyingCursors").then((mod) => mod.FlyingCursors),
+//   { ssr: false },
+// );
+const BasicFooter = dynamic(
+  () => import("../components/BasicFooter").then((mod) => mod.BasicFooter),
   { ssr: false },
 );
 const Navbar = dynamic(
@@ -36,21 +41,23 @@ const Navbar = dynamic(
 );
 
 export default function HomePage() {
-  const [showCursors, setShowCursors] = useLocalStorage({
-    key: "show-cursors",
-    defaultValue: false,
-  });
+  // const [showCursors, setShowCursors] = useLocalStorage({
+  //   key: "show-cursors",
+  //   defaultValue: false,
+  // });
 
   return (
     <>
-      {showCursors && <FlyingCursors />}
+      {/* {showCursors && <FlyingCursors />} */}
       <Navbar />
       <Container size="lg" p="xl" mt={180}>
-        <Welcome />
-        <Experience />
-        <Projects />
-        <Education />
-        <Footer />
+        <Suspense fallback={<></>}>
+          <Welcome />
+          <Experience />
+          <Projects />
+          <Education />
+          <BasicFooter />
+        </Suspense>
       </Container>
     </>
   );
