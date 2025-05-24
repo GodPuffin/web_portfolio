@@ -15,6 +15,7 @@ import { BaseCard } from "./common/BaseCard";
 import { SectionContainer } from "./common/SectionContainer";
 import { useAnimationView } from "./common/BaseCard";
 import { useMantineColorScheme } from "@mantine/core";
+import { getBadgeColor } from "../utils/badgeColors";
 
 interface ProjectCardProps {
   title: string;
@@ -55,47 +56,6 @@ function ProjectCard({
     once: true,
     amount: "some",
   });
-
-  const getBadgeColor = (tech: string) => {
-    switch (tech.toLowerCase()) {
-      case "python":
-      case "jupyter":
-        return "blue";
-      case "typescript":
-      case "javascript":
-        return "cyan";
-      case "java":
-        return "green";
-      case "ai":
-      case "machine learning":
-        return "grape";
-      case "robotics":
-      case "engineering":
-        return "red";
-      case "cad":
-      case "3d printing":
-        return "indigo";
-      case "computer vision":
-      case "data science":
-      case "data analysis":
-        return "teal";
-      case "web scraping":
-      case "web development":
-      case "htmx":
-        return "pink";
-      case "electronics":
-      case "firmware":
-        return "yellow";
-      case "sql":
-      case "postgres":
-      case "sqlite":
-        return "orange";
-      case "go":
-        return "violet";
-      default:
-        return "gray";
-    }
-  };
 
   return (
     <BaseCard
@@ -284,7 +244,7 @@ export function Projects() {
       />
       <ProjectCard
         title="FPV Drones"
-        description="Built and flew custom FPV drones for acrobatic flying, racing, and cinematography. Designed, 3D printed, assembled, and CNC cut custom parts for the drones."
+        description="Built and flew custom FPV drones as a hobby. Designed, 3D printed, assembled, and CNC cut custom parts for the drones."
         technologies={[
           "Robotics",
           "3D Printing",
