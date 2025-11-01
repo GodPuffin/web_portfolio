@@ -197,7 +197,7 @@ export function Projects() {
         index={3}
         isGroupInView={isGroupInView}
       />
-      <ProjectCard
+      {/* <ProjectCard
         title="Linky AI"
         description="A tool to distill essential data from web pages using RAG and conversational AI."
         technologies={[
@@ -210,6 +210,22 @@ export function Projects() {
         zIndex={4}
         websiteLink="https://linky.im"
         githubLink="https://github.com/GodPuffin/linky"
+        index={4}
+        isGroupInView={isGroupInView}
+      /> */}
+      <ProjectCard
+        title="Argus"
+        description="AI-powered surveillance system for monitoring live feeds from various sources autonomously."
+        technologies={[
+          "TypeScript",
+          "AI",
+          "Computer Vision",
+          "Web Development",
+        ]}
+        rotation={-3}
+        zIndex={4}
+        githubLink="https://github.com/GodPuffin/Argus"
+        devpostLink="https://devpost.com/software/argus-w6i0pv"
         index={4}
         isGroupInView={isGroupInView}
       />
