@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { Card, Image, Text, useMantineColorScheme } from "@mantine/core";
-import { ReactNode } from "react";
+import { Card, Image, Text, useMantineColorScheme } from "@mantine/core"
+import type { ReactNode } from "react"
 
 interface CardHeaderProps {
-  title: string;
-  logo?: string;
-  darkLogo?: string;
-  children?: ReactNode;
-  logoHeight?: number;
+  title: string
+  logo?: string
+  darkLogo?: string
+  children?: ReactNode
+  logoHeight?: number
 }
 
 export function CardHeader({
@@ -16,10 +16,10 @@ export function CardHeader({
   logo,
   darkLogo,
   children,
-  logoHeight = 50
+  logoHeight = 50,
 }: CardHeaderProps) {
-  const { colorScheme } = useMantineColorScheme();
-  
+  const { colorScheme } = useMantineColorScheme()
+
   return (
     <Card.Section p="md">
       {(logo || darkLogo) && (
@@ -37,5 +37,5 @@ export function CardHeader({
         {children}
       </div>
     </Card.Section>
-  );
-} 
+  )
+}

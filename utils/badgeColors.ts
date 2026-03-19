@@ -2,45 +2,45 @@ export const getBadgeColor = (tech: string) => {
   switch (tech.toLowerCase()) {
     case "python":
     case "jupyter":
-      return "blue";
+      return "blue"
     case "typescript":
     case "javascript":
-      return "cyan";
+      return "cyan"
     case "java":
-      return "green";
+      return "green"
     case "leadership":
     case "ai":
     case "machine learning":
-      return "grape";
+      return "grape"
     case "robotics":
     case "engineering":
-      return "red";
+      return "red"
     case "cad":
     case "3d printing":
-      return "indigo";
+      return "indigo"
     case "computer vision":
     case "data science":
     case "data analysis":
-      return "teal";
+      return "teal"
     case "web scraping":
     case "web development":
     case "htmx":
-      return "pink";
+      return "pink"
     case "electronics":
     case "firmware":
-      return "yellow";
+      return "yellow"
     case "sql":
     case "postgres":
     case "sqlite":
     case "project management":
-      return "orange";
+      return "orange"
     case "go":
-      return "violet";
+      return "violet"
     case "php":
-      return "indigo";
+      return "indigo"
     case "teaching":
-      return "lime";
+      return "lime"
     default:
-      return "gray";
+      return "gray"
   }
-}; 
+}

@@ -1,14 +1,14 @@
-import OpenAI from "openai";
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
+import OpenAI from "openai"
+import { zodResponseFormat } from "openai/helpers/zod"
+import { z } from "zod"
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-});
+})
 
 const MessageSafetyResponse = z.object({
   isSafe: z.boolean(),
-});
+})
 
 export async function checkMessageSafety(message: string): Promise<boolean> {
   try {
@@ -22,24 +22,23 @@ export async function checkMessageSafety(message: string): Promise<boolean> {
         },
         {
           role: "user",
-          content:
-            `Is this message safe and appropriate for the portfolio website?: "${message}"`,
+          content: `Is this message safe and appropriate for the portfolio website?: "${message}"`,
         },
       ],
       temperature: 0,
       max_tokens: 50,
       response_format: zodResponseFormat(
         MessageSafetyResponse,
-        "message_safety",
+        "message_safety"
       ),
-    });
-    const result = response.choices[0]?.message?.parsed;
+    })
+    const result = response.choices[0]?.message?.parsed
     if (!result) {
-      throw new Error("Invalid response format");
+      throw new Error("Invalid response format")
     }
-    return result.isSafe;
+    return result.isSafe
   } catch (error) {
-    console.error("Error checking message safety:", error);
-    throw error;
+    console.error("Error checking message safety:", error)
+    throw error
   }
 }

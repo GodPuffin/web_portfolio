@@ -7,6 +7,6 @@ const nextConfig = {
   env: {
     BUILD_TIME: new Date().toISOString(),
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

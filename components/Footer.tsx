@@ -1,6 +1,5 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
 import {
   Button,
   Center,
@@ -12,17 +11,18 @@ import {
   Loader,
   Modal,
   Paper,
-  rem,
   Stack,
   Switch,
   Text,
   TextInput,
   Tooltip,
-} from "@mantine/core";
-import { supabase } from "../utils/supabaseClient";
-import { generateDeviceId } from "../utils/fingerprint";
-import { IconPointerFilled } from "@tabler/icons-react";
-import { useLocalStorage } from "@mantine/hooks";
+  rem,
+} from "@mantine/core"
+import { useLocalStorage } from "@mantine/hooks"
+import { IconPointerFilled } from "@tabler/icons-react"
+import { useEffect, useState } from "react"
+import { generateDeviceId } from "../utils/fingerprint"
+import { supabase } from "../utils/supabaseClient"
 
 const checkMessageSafety = async (message: string): Promise<boolean> => {
   try {
@@ -32,34 +32,36 @@ const checkMessageSafety = async (message: string): Promise<boolean> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ message }),
-    });
+    })
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error("Network response was not ok")
     }
 
-    const data = await response.json();
-    return data.isSafe;
+    const data = await response.json()
+    return data.isSafe
   } catch (error) {
-    console.error("Error checking message safety:", error);
-    throw error;
+    console.error("Error checking message safety:", error)
+    throw error
   }
-};
+}
 
 export function Footer() {
-  const [selectedColor, setSelectedColor] = useState("");
-  const [modalOpened, setModalOpened] = useState(false);
-  const [message, setMessage] = useState("");
-  const [deviceId, setDeviceId] = useState<string | null>(null);
-  const [userCursor, setUserCursor] = useState<
-    { id: number; message: string; color: string } | null
-  >(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState("")
+  const [modalOpened, setModalOpened] = useState(false)
+  const [message, setMessage] = useState("")
+  const [deviceId, setDeviceId] = useState<string | null>(null)
+  const [userCursor, setUserCursor] = useState<{
+    id: number
+    message: string
+    color: string
+  } | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [showCursors, setShowCursors] = useLocalStorage({
     key: "show-cursors",
     defaultValue: false,
-  });
+  })
 
   const colors = [
     "orange",
@@ -72,55 +74,55 @@ export function Footer() {
     "teal",
     "green",
     "yellow",
-  ];
+  ]
 
   useEffect(() => {
     const initializeDeviceId = async () => {
-      const id = await generateDeviceId();
-      setDeviceId(id);
-      fetchUserCursor(id);
-    };
+      const id = await generateDeviceId()
+      setDeviceId(id)
+      fetchUserCursor(id)
+    }
 
-    initializeDeviceId();
-  }, []);
+    initializeDeviceId()
+  }, [])
 
   const fetchUserCursor = async (id: string) => {
     const { data, error } = await supabase
       .from("cursors")
       .select("*")
       .eq("device_id", id)
-      .maybeSingle();
+      .maybeSingle()
 
     if (error) {
-      console.error("Error fetching user cursor:", error);
+      console.error("Error fetching user cursor:", error)
     } else if (data) {
-      setUserCursor(data);
-      setMessage(data.message);
-      setSelectedColor(data.color);
+      setUserCursor(data)
+      setMessage(data.message)
+      setSelectedColor(data.color)
     }
-  };
+  }
 
   const handleSubmit = async () => {
     if (!deviceId) {
-      console.error("Device ID is missing");
-      return;
+      console.error("Device ID is missing")
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     if (message.length > 30) {
-      setError("Message must be 30 characters or less");
-      setIsLoading(false);
-      return;
+      setError("Message must be 30 characters or less")
+      setIsLoading(false)
+      return
     }
 
     try {
-      const isSafe = await checkMessageSafety(message);
+      const isSafe = await checkMessageSafety(message)
       if (!isSafe) {
-        setError("Message is not appropriate. Please try again.");
-        setIsLoading(false);
-        return;
+        setError("Message is not appropriate. Please try again.")
+        setIsLoading(false)
+        return
       }
 
       if (message && selectedColor) {
@@ -128,35 +130,37 @@ export function Footer() {
           device_id: deviceId,
           message,
           color: selectedColor,
-        };
-        let data, error;
+        }
 
         if (userCursor) {
-          ({ data, error } = await supabase
+          const { error: submitError } = await supabase
             .from("cursors")
             .update(cursorData)
-            .eq("device_id", deviceId));
+            .eq("device_id", deviceId)
+
+          if (submitError) {
+            throw new Error("Error submitting cursor")
+          }
         } else {
-          ({ data, error } = await supabase
+          const { error: submitError } = await supabase
             .from("cursors")
-            .insert([cursorData]));
+            .insert([cursorData])
+
+          if (submitError) {
+            throw new Error("Error submitting cursor")
+          }
         }
 
-        if (error) {
-          throw new Error("Error submitting cursor");
-        } else {
-          setModalOpened(false);
-          setUserCursor(data ? data[0] : null);
-          fetchUserCursor(deviceId);
-        }
+        setModalOpened(false)
+        await fetchUserCursor(deviceId)
       }
     } catch (error) {
-      console.error("Error:", error);
-      setError("An error occurred. Please try again.");
+      console.error("Error:", error)
+      setError("An error occurred. Please try again.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div
@@ -166,10 +170,7 @@ export function Footer() {
         marginTop: "100px",
       }}
     >
-      <Paper
-        p="md"
-        withBorder
-      >
+      <Paper p="md" withBorder>
         <Container size="md">
           <Group justify="space-between">
             <Text size="sm" c="dimmed">
@@ -183,37 +184,35 @@ export function Footer() {
               >
                 {userCursor ? "Edit Message" : "Add Message"}
               </Button>
-              {userCursor && userCursor.message
-                ? (
-                  <Tooltip
-                    label={userCursor.message}
-                    position="top"
-                    color={selectedColor || "blue"}
-                  >
-                    <IconPointerFilled
-                      size={20}
-                      color={`var(--mantine-color-${
-                        selectedColor || "blue"
-                      }-6)`}
-                    />
-                  </Tooltip>
-                )
-                : (
+              {userCursor?.message ? (
+                <Tooltip
+                  label={userCursor.message}
+                  position="top"
+                  color={selectedColor || "blue"}
+                >
                   <IconPointerFilled
                     size={20}
                     color={`var(--mantine-color-${selectedColor || "blue"}-6)`}
                   />
-                )}
+                </Tooltip>
+              ) : (
+                <IconPointerFilled
+                  size={20}
+                  color={`var(--mantine-color-${selectedColor || "blue"}-6)`}
+                />
+              )}
               <Switch
                 checked={showCursors}
                 onChange={(event) =>
-                  setShowCursors(event.currentTarget.checked)}
+                  setShowCursors(event.currentTarget.checked)
+                }
                 aria-label="Show cursors"
                 color={selectedColor || "blue"}
               />
             </Group>
             <Text size="sm" c="dimmed">
-              {process.env.BUILD_TIME && `Updated on ${new Date(process.env.BUILD_TIME).toLocaleDateString('en-CA')}`}
+              {process.env.BUILD_TIME &&
+                `Updated on ${new Date(process.env.BUILD_TIME).toLocaleDateString("en-CA")}`}
             </Text>
           </Group>
         </Container>
@@ -222,9 +221,9 @@ export function Footer() {
       <Modal
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
-        title={userCursor
-          ? "Edit Your Flying Cursor"
-          : "Add Your Flying Cursor"}
+        title={
+          userCursor ? "Edit Your Flying Cursor" : "Add Your Flying Cursor"
+        }
         centered
       >
         <Grid>
@@ -238,7 +237,9 @@ export function Footer() {
                 fw={400}
                 maxLength={30}
               />
-              <Text size="sm" mt="md">And a color:</Text>
+              <Text size="sm" mt="md">
+                And a color:
+              </Text>
               <Center>
                 <Group justify="center">
                   {colors.map((color) => (
@@ -268,35 +269,31 @@ export function Footer() {
           </Grid.Col>
           <Grid.Col span={5}>
             <Center h="100%">
-              {message
-                ? (
-                  <Tooltip
-                    label={message}
-                    color={selectedColor || "red"}
-                    opened
-                  >
-                    <IconPointerFilled
-                      size={50}
-                      style={{
-                        color: `var(--mantine-color-${
-                          selectedColor || "red"
-                        }-6)`,
-                      }}
-                    />
-                  </Tooltip>
-                )
-                : (
+              {message ? (
+                <Tooltip label={message} color={selectedColor || "red"} opened>
                   <IconPointerFilled
                     size={50}
                     style={{
                       color: `var(--mantine-color-${selectedColor || "red"}-6)`,
                     }}
                   />
-                )}
+                </Tooltip>
+              ) : (
+                <IconPointerFilled
+                  size={50}
+                  style={{
+                    color: `var(--mantine-color-${selectedColor || "red"}-6)`,
+                  }}
+                />
+              )}
             </Center>
           </Grid.Col>
         </Grid>
-        {error && <Text c="red" size="sm" mt="xs">{error}</Text>}
+        {error && (
+          <Text c="red" size="sm" mt="xs">
+            {error}
+          </Text>
+        )}
         <Button
           onClick={handleSubmit}
           mt="md"
@@ -304,11 +301,15 @@ export function Footer() {
           variant="default"
           disabled={isLoading}
         >
-          {isLoading
-            ? <Loader size="sm" color={selectedColor} type="dots" />
-            : (userCursor ? "Update" : "Save")}
+          {isLoading ? (
+            <Loader size="sm" color={selectedColor} type="dots" />
+          ) : userCursor ? (
+            "Update"
+          ) : (
+            "Save"
+          )}
         </Button>
       </Modal>
     </div>
-  );
+  )
 }

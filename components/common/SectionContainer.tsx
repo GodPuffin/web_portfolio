@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { Container, Group, Stack, Title } from "@mantine/core";
-import { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { Container, Group, Stack, Title } from "@mantine/core"
+import { motion } from "framer-motion"
+import type { ReactNode, Ref } from "react"
 
 interface SectionContainerProps {
-  title: string;
-  emoji: string;
-  children: ReactNode;
-  headerRef: any;
-  groupRef: any;
-  isHeaderInView: boolean;
-  mt?: number;
+  title: string
+  emoji: string
+  children: ReactNode
+  headerRef: Ref<HTMLDivElement>
+  groupRef: Ref<HTMLDivElement>
+  isHeaderInView: boolean
+  mt?: number
 }
 
 export function SectionContainer({
@@ -30,12 +30,14 @@ export function SectionContainer({
           <motion.div
             ref={headerRef}
             initial={{ opacity: 0, y: 20 }}
-            animate={isHeaderInView
-              ? { opacity: 1, y: 0 }
-              : { opacity: 0, y: 20 }}
+            animate={
+              isHeaderInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+            }
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <Title order={2} ta="center">{title} {emoji}</Title>
+            <Title order={2} ta="center">
+              {title} {emoji}
+            </Title>
           </motion.div>
         </Container>
         <Group
@@ -48,5 +50,5 @@ export function SectionContainer({
         </Group>
       </Stack>
     </Container>
-  );
-} 
+  )
+}

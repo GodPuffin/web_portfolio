@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { Card, useMantineColorScheme } from "@mantine/core";
-import { useState, useRef, ReactNode } from "react";
-import { motion, useInView } from "framer-motion";
-import { useMediaQuery } from "@mantine/hooks";
+import { Card } from "@mantine/core"
+import { useMediaQuery } from "@mantine/hooks"
+import { motion, useInView } from "framer-motion"
+import { type ReactNode, useRef, useState } from "react"
 
 export interface BaseCardProps {
-  rotation: number;
-  zIndex: number;
-  index: number;
-  isGroupInView: boolean;
-  children: ReactNode;
+  rotation: number
+  zIndex: number
+  index: number
+  isGroupInView: boolean
+  children: ReactNode
 }
 
 export function BaseCard({
@@ -20,16 +20,16 @@ export function BaseCard({
   isGroupInView,
   children,
 }: BaseCardProps) {
-  const [hovered, setHovered] = useState(false);
-  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false)
+  const ref = useRef<HTMLDivElement | null>(null)
   const isInView = useInView(ref, {
     once: true,
     amount: "some",
-  });
+  })
 
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const transitionDelay = isMobile ? 0.2 : index * 0.15;
-  const shouldAnimate = isMobile ? isInView : isGroupInView;
+  const isMobile = useMediaQuery("(max-width: 768px)")
+  const transitionDelay = isMobile ? 0.2 : index * 0.15
+  const shouldAnimate = isMobile ? isInView : isGroupInView
 
   return (
     <motion.div
@@ -70,21 +70,21 @@ export function BaseCard({
         {children}
       </Card>
     </motion.div>
-  );
+  )
 }
 
 export function useAnimationView() {
-  const headerRef = useRef(null);
-  const groupRef = useRef(null);
+  const headerRef = useRef<HTMLDivElement | null>(null)
+  const groupRef = useRef<HTMLDivElement | null>(null)
   const isHeaderInView = useInView(headerRef, {
     once: true,
     amount: 0.3,
-  });
+  })
 
   const isGroupInView = useInView(groupRef, {
     once: true,
     amount: 0.1,
-  });
+  })
 
-  return { headerRef, groupRef, isHeaderInView, isGroupInView };
-} 
+  return { headerRef, groupRef, isHeaderInView, isGroupInView }
+}

@@ -1,22 +1,21 @@
-"use client";
+"use client"
 
-import { Text } from "@mantine/core";
-import { BaseCard } from "./common/BaseCard";
-import { CardHeader } from "./common/CardHeader";
-import { SectionContainer } from "./common/SectionContainer";
-import { useAnimationView } from "./common/BaseCard";
+import { Text } from "@mantine/core"
+import { BaseCard, useAnimationView } from "./common/BaseCard"
+import { CardHeader } from "./common/CardHeader"
+import { SectionContainer } from "./common/SectionContainer"
 
 interface EducationCardProps {
-  institution: string;
-  degree?: string;
-  dateRange: string;
-  description?: string;
-  rotation: number;
-  zIndex: number;
-  logo?: string;
-  darkLogo?: string;
-  index: number;
-  isGroupInView: boolean;
+  institution: string
+  degree?: string
+  dateRange: string
+  description?: string
+  rotation: number
+  zIndex: number
+  logo?: string
+  darkLogo?: string
+  index: number
+  isGroupInView: boolean
 }
 
 function EducationCard({
@@ -39,16 +38,25 @@ function EducationCard({
       isGroupInView={isGroupInView}
     >
       <CardHeader title={institution} logo={logo} darkLogo={darkLogo}>
-        {degree && <Text size="sm" c="dimmed">{degree}</Text>}
+        {degree && (
+          <Text size="sm" c="dimmed">
+            {degree}
+          </Text>
+        )}
         <Text size="sm">{dateRange}</Text>
       </CardHeader>
-      {description && <Text size="sm" mt="md">{description}</Text>}
+      {description && (
+        <Text size="sm" mt="md">
+          {description}
+        </Text>
+      )}
     </BaseCard>
-  );
+  )
 }
 
 export function Education() {
-  const { headerRef, groupRef, isHeaderInView, isGroupInView } = useAnimationView();
+  const { headerRef, groupRef, isHeaderInView, isGroupInView } =
+    useAnimationView()
 
   return (
     <SectionContainer
@@ -92,5 +100,5 @@ export function Education() {
         isGroupInView={isGroupInView}
       />
     </SectionContainer>
-  );
+  )
 }
