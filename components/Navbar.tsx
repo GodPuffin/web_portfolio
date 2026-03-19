@@ -1,6 +1,5 @@
-"use client";
+"use client"
 
-import { useState } from "react";
 import {
   ActionIcon,
   Button,
@@ -10,7 +9,10 @@ import {
   Paper,
   Stack,
   Text,
-} from "@mantine/core";
+  useMantineColorScheme,
+  useMantineTheme,
+} from "@mantine/core"
+import { useMediaQuery } from "@mantine/hooks"
 import {
   IconBrandGithub,
   IconBrandInstagram,
@@ -20,10 +22,9 @@ import {
   IconMail,
   IconMoonStars,
   IconSun,
-} from "@tabler/icons-react";
-import { useMediaQuery } from "@mantine/hooks";
-import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
-import styles from "./Navbar.module.css";
+} from "@tabler/icons-react"
+import { useState } from "react"
+import styles from "./Navbar.module.css"
 
 const links = [
   {
@@ -56,16 +57,16 @@ const links = [
     url: "/resume.pdf",
     hoverColor: "orange",
   },
-];
+]
 
 export function Navbar() {
-  const [drawerOpened, setDrawerOpened] = useState(false);
-  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
-  const isMobile = useMediaQuery("(max-width: 768px)");
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-  const theme = useMantineTheme();
+  const [drawerOpened, setDrawerOpened] = useState(false)
+  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null)
+  const isMobile = useMediaQuery("(max-width: 768px)")
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+  const theme = useMantineTheme()
 
-  const ThemeIcon = colorScheme === "dark" ? IconSun : IconMoonStars;
+  const ThemeIcon = colorScheme === "dark" ? IconSun : IconMoonStars
 
   return (
     <>
@@ -80,63 +81,65 @@ export function Navbar() {
             >
               Marcus Lee
             </Text>
-            {isMobile
-              ? (
-                <ActionIcon
-                  onClick={() => setDrawerOpened(true)}
-                  size="lg"
-                  variant="transparent"
-                  color={colorScheme === "dark" ? "white" : "dark"}
-                  aria-label="Open menu"
-                >
-                  <IconCategory2 size={24} />
-                </ActionIcon>
-              )
-              : (
-                <Group className={styles.iconGroup}>
-                  {links.map((item) => (
-                    <ActionIcon
-                      key={item.label}
-                      radius="lg"
-                      size="xl"
-                      variant="default"
-                      className={styles.actionIcon}
-                      component="a"
-                      href={item.url}
-                      onMouseEnter={() => setHoveredIcon(item.label)}
-                      onMouseLeave={() => setHoveredIcon(null)}
-                      aria-label={item.label}
-                      target="_blank"
-                    >
-                      <item.icon
-                        size={24}
-                        color={hoveredIcon === item.label
-                          ? theme.colors[item.hoverColor][6]
-                          : undefined}
-                      />
-                    </ActionIcon>
-                  ))}
+            {isMobile ? (
+              <ActionIcon
+                onClick={() => setDrawerOpened(true)}
+                size="lg"
+                variant="transparent"
+                color={colorScheme === "dark" ? "white" : "dark"}
+                aria-label="Open menu"
+              >
+                <IconCategory2 size={24} />
+              </ActionIcon>
+            ) : (
+              <Group className={styles.iconGroup}>
+                {links.map((item) => (
                   <ActionIcon
-                    onClick={() => toggleColorScheme()}
+                    key={item.label}
                     radius="lg"
                     size="xl"
                     variant="default"
                     className={styles.actionIcon}
-                    onMouseEnter={() => setHoveredIcon("theme")}
+                    component="a"
+                    href={item.url}
+                    onMouseEnter={() => setHoveredIcon(item.label)}
                     onMouseLeave={() => setHoveredIcon(null)}
-                    aria-label="Toggle theme"
+                    aria-label={item.label}
+                    target="_blank"
                   >
-                    <ThemeIcon
+                    <item.icon
                       size={24}
-                      color={hoveredIcon === "theme"
-                        ? (colorScheme === "dark"
-                          ? theme.colors.yellow[4]
-                          : theme.colors.blue[6])
-                        : undefined}
+                      color={
+                        hoveredIcon === item.label
+                          ? theme.colors[item.hoverColor][6]
+                          : undefined
+                      }
                     />
                   </ActionIcon>
-                </Group>
-              )}
+                ))}
+                <ActionIcon
+                  onClick={() => toggleColorScheme()}
+                  radius="lg"
+                  size="xl"
+                  variant="default"
+                  className={styles.actionIcon}
+                  onMouseEnter={() => setHoveredIcon("theme")}
+                  onMouseLeave={() => setHoveredIcon(null)}
+                  aria-label="Toggle theme"
+                >
+                  <ThemeIcon
+                    size={24}
+                    color={
+                      hoveredIcon === "theme"
+                        ? colorScheme === "dark"
+                          ? theme.colors.yellow[4]
+                          : theme.colors.blue[6]
+                        : undefined
+                    }
+                  />
+                </ActionIcon>
+              </Group>
+            )}
           </Group>
         </Paper>
       </Container>
@@ -160,9 +163,11 @@ export function Navbar() {
               leftSection={
                 <item.icon
                   size={24}
-                  color={hoveredIcon === item.label
-                    ? theme.colors[item.hoverColor][6]
-                    : undefined}
+                  color={
+                    hoveredIcon === item.label
+                      ? theme.colors[item.hoverColor][6]
+                      : undefined
+                  }
                 />
               }
               variant="default"
@@ -181,11 +186,13 @@ export function Navbar() {
             leftSection={
               <ThemeIcon
                 size={24}
-                color={hoveredIcon === "theme"
-                  ? (colorScheme === "dark"
-                    ? theme.colors.yellow[4]
-                    : theme.colors.blue[6])
-                  : undefined}
+                color={
+                  hoveredIcon === "theme"
+                    ? colorScheme === "dark"
+                      ? theme.colors.yellow[4]
+                      : theme.colors.blue[6]
+                    : undefined
+                }
               />
             }
             variant="default"
@@ -201,5 +208,5 @@ export function Navbar() {
         </Stack>
       </Drawer>
     </>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   ActionIcon,
@@ -7,31 +7,28 @@ import {
   Group,
   Image,
   Text,
-} from "@mantine/core";
-import { useRef } from "react";
-import { IconBrandGithub, IconCode, IconWorld } from "@tabler/icons-react";
-import { useInView } from "framer-motion";
-import { BaseCard } from "./common/BaseCard";
-import { SectionContainer } from "./common/SectionContainer";
-import { useAnimationView } from "./common/BaseCard";
-import { useMantineColorScheme } from "@mantine/core";
-import { getBadgeColor } from "../utils/badgeColors";
+  useMantineColorScheme,
+} from "@mantine/core"
+import { IconBrandGithub, IconCode, IconWorld } from "@tabler/icons-react"
+import { getBadgeColor } from "../utils/badgeColors"
+import { BaseCard, useAnimationView } from "./common/BaseCard"
+import { SectionContainer } from "./common/SectionContainer"
 
 interface ProjectCardProps {
-  title: string;
-  description: string;
-  technologies: string[];
-  rotation: number;
-  zIndex: number;
-  logo?: string;
-  darkLogo?: string;
-  image?: string;
-  youtubeEmbed?: string;
-  githubLink?: string;
-  devpostLink?: string;
-  websiteLink?: string;
-  index: number;
-  isGroupInView: boolean;
+  title: string
+  description: string
+  technologies: string[]
+  rotation: number
+  zIndex: number
+  logo?: string
+  darkLogo?: string
+  image?: string
+  youtubeEmbed?: string
+  githubLink?: string
+  devpostLink?: string
+  websiteLink?: string
+  index: number
+  isGroupInView: boolean
 }
 
 function ProjectCard({
@@ -50,12 +47,7 @@ function ProjectCard({
   index,
   isGroupInView,
 }: ProjectCardProps) {
-  const { colorScheme } = useMantineColorScheme();
-  const ref = useRef(null);
-  const isCardInView = useInView(ref, {
-    once: true,
-    amount: "some",
-  });
+  const { colorScheme } = useMantineColorScheme()
 
   return (
     <BaseCard
@@ -75,7 +67,11 @@ function ProjectCard({
               fit="contain"
               mb="xs"
             />
-          ) : <Text size="lg" fw={500}>{title}</Text>}
+          ) : (
+            <Text size="lg" fw={500}>
+              {title}
+            </Text>
+          )}
           {githubLink && (
             <ActionIcon
               component="a"
@@ -129,24 +125,25 @@ function ProjectCard({
             title={`${title} YouTube video`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-          >
-          </iframe>
-        </Card.Section>
-      ) : image && (
-        <Card.Section>
-          <Image
-            src={image}
-            height={160}
-            alt={`${title} project screenshot`}
-            fit="cover"
           />
         </Card.Section>
+      ) : (
+        image && (
+          <Card.Section>
+            <Image
+              src={image}
+              height={160}
+              alt={`${title} project screenshot`}
+              fit="cover"
+            />
+          </Card.Section>
+        )
       )}
       <Text size="sm">{description}</Text>
       <Group mt="md" gap="xs">
-        {technologies.map((tech, index) => (
+        {technologies.map((tech) => (
           <Badge
-            key={index}
+            key={tech}
             variant="light"
             size="sm"
             fw={300}
@@ -157,11 +154,12 @@ function ProjectCard({
         ))}
       </Group>
     </BaseCard>
-  );
+  )
 }
 
 export function Projects() {
-  const { headerRef, groupRef, isHeaderInView, isGroupInView } = useAnimationView();
+  const { headerRef, groupRef, isHeaderInView, isGroupInView } =
+    useAnimationView()
 
   return (
     <SectionContainer
@@ -185,12 +183,7 @@ export function Projects() {
       <ProjectCard
         title="Northern Knights 2024"
         description="296's 2024 robot, Bilbo. Featuring a Swerve Drivetrain, Vision Processing, and effective autonomous navigation."
-        technologies={[
-          "Java",
-          "Robotics",
-          "CAD",
-          "Computer Vision",
-        ]}
+        technologies={["Java", "Robotics", "CAD", "Computer Vision"]}
         rotation={6}
         zIndex={5}
         githubLink="https://github.com/FRC296/FRC-2024"
@@ -232,11 +225,7 @@ export function Projects() {
       <ProjectCard
         title="Pharmahacks 2024"
         description="Developed a neural decoding model to predict mouse positions from brain activity data, using advanced data processing techniques."
-        technologies={[
-          "Jupyter",
-          "Machine Learning",
-          "Data Science",
-        ]}
+        technologies={["Jupyter", "Machine Learning", "Data Science"]}
         rotation={2}
         zIndex={3}
         githubLink="https://github.com/GodPuffin/Pharmahacks2024"
@@ -246,11 +235,7 @@ export function Projects() {
       <ProjectCard
         title="Made by Kate"
         description="Built a complete ecommerce website for a friend's hobby business using Next.js and Stripe."
-        technologies={[
-          "TypeScript",
-          "SQL",
-          "Web Development",
-        ]}
+        technologies={["TypeScript", "SQL", "Web Development"]}
         rotation={4}
         zIndex={2}
         websiteLink="https://madebykate.ca"
@@ -261,12 +246,7 @@ export function Projects() {
       <ProjectCard
         title="FPV Drones"
         description="Built and flew custom FPV drones as a hobby. Designed, 3D printed, assembled, and CNC cut custom parts for the drones."
-        technologies={[
-          "Robotics",
-          "3D Printing",
-          "Electronics",
-          "Firmware",
-        ]}
+        technologies={["Robotics", "3D Printing", "Electronics", "Firmware"]}
         rotation={-5}
         zIndex={1}
         index={7}
@@ -275,11 +255,7 @@ export function Projects() {
       <ProjectCard
         title="Family Plan Manager"
         description="A basic web application for managing shared family plans and subscriptions with friends."
-        technologies={[
-          "Go",
-          "HTMX",
-          "SQLite",
-        ]}
+        technologies={["Go", "HTMX", "SQLite"]}
         rotation={10}
         zIndex={5}
         githubLink="https://github.com/GodPuffin/FamilyPlan"
@@ -288,5 +264,5 @@ export function Projects() {
         isGroupInView={isGroupInView}
       />
     </SectionContainer>
-  );
+  )
 }

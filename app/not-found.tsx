@@ -1,6 +1,6 @@
-import { Button, Container, Text, Title } from "@mantine/core";
-import { IconArrowLeft } from "@tabler/icons-react";
-import Link from "next/link";
+import { Button, Container, Text, Title } from "@mantine/core"
+import { IconArrowLeft } from "@tabler/icons-react"
+import Link from "next/link"
 
 export default function NotFoundPage() {
   return (
@@ -19,5 +19,5 @@ export default function NotFoundPage() {
         Go Back Home
       </Button>
     </Container>
-  );
+  )
 }
