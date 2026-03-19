@@ -13,5 +13,3 @@ pnpm dev
 pnpm biome:check
 pnpm format
 ```
-
-> Note: the first `pnpm install` will generate `pnpm-lock.yaml`.
