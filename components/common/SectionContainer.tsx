@@ -2,14 +2,14 @@
 
 import { Container, Group, Stack, Title } from "@mantine/core"
 import { motion } from "framer-motion"
-import type { ReactNode, RefObject } from "react"
+import type { ReactNode, Ref } from "react"
 
 interface SectionContainerProps {
   title: string
   emoji: string
   children: ReactNode
-  headerRef: RefObject<HTMLDivElement | null>
-  groupRef: RefObject<HTMLDivElement | null>
+  headerRef: Ref<HTMLDivElement>
+  groupRef: Ref<HTMLDivElement>
   isHeaderInView: boolean
   mt?: number
 }
