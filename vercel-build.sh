@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 # Vercel build: compile the Leptos app to WASM and emit static files to dist/.
+#
+# Prebuilt Trunk / wasm-bindgen binaries are dynamically linked against a newer
+# glibc than Vercel's build image provides, so we build both from source with
+# `cargo install`. Trunk then uses the PATH-installed wasm-bindgen (matching the
+# locked version) instead of downloading the glibc-linked release binary.
 set -euo pipefail
 
-TRUNK_VERSION="v0.21.14"
+TRUNK_VERSION="0.21.14"
+WASM_BINDGEN_VERSION="0.2.126"
 
 export RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}"
 export CARGO_HOME="${CARGO_HOME:-$HOME/.cargo}"
@@ -17,12 +23,12 @@ export PATH="$CARGO_HOME/bin:$PATH"
 # rust-toolchain.toml also requests this target; add it explicitly to be safe.
 rustup target add wasm32-unknown-unknown
 
-# Install Trunk (prebuilt binary) if missing.
+# Build Trunk and wasm-bindgen-cli from source (see header comment).
 if ! command -v trunk >/dev/null 2>&1; then
-  mkdir -p "$CARGO_HOME/bin"
-  curl -fsSL \
-    "https://github.com/trunk-rs/trunk/releases/download/${TRUNK_VERSION}/trunk-x86_64-unknown-linux-gnu.tar.gz" \
-    | tar -xzf - -C "$CARGO_HOME/bin"
+  cargo install trunk --version "$TRUNK_VERSION" --locked
+fi
+if ! command -v wasm-bindgen >/dev/null 2>&1; then
+  cargo install wasm-bindgen-cli --version "$WASM_BINDGEN_VERSION" --locked
 fi
 
 trunk build --release
