@@ -1,0 +1,16 @@
+[build]
+target = "index.html"
+dist = "dist"
+# wasm-opt is disabled per-link (data-wasm-opt="0") to avoid fetching binaryen.
+
+[serve]
+address = "127.0.0.1"
+port = 8080
+open = false
+
+# Copy the static public assets (fonts, logos, favicon, og-image, resume, robots)
+# into the dist root so they are served at "/..." exactly as before.
+[[hooks]]
+stage = "post_build"
+command = "sh"
+command_arguments = ["-c", "cp -r public/. \"$TRUNK_STAGING_DIR/\""]

@@ -1,0 +1,149 @@
+/* ---- Reveal on scroll (framer-motion: opacity 0/y20 -> 1/y0, easeInOut) ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s cubic-bezier(0.42, 0, 0.58, 1),
+    transform 0.5s cubic-bezier(0.42, 0, 0.58, 1);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Waving emoji (rotate keyframes over 2.5s linear, on hover) ---- */
+.wave-emoji {
+  display: inline-block;
+  transform-origin: bottom right;
+}
+.wave-emoji:hover {
+  animation: wave 2.5s linear infinite;
+}
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  16.666% { transform: rotate(14deg); }
+  33.333% { transform: rotate(-8deg); }
+  50% { transform: rotate(14deg); }
+  66.666% { transform: rotate(-4deg); }
+  83.333% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* ---- Fanned card deck: static tilt + hover straighten/lift/scale ---- */
+.card-wrapper {
+  position: relative;
+  z-index: 0;
+}
+.card-wrapper:hover {
+  z-index: 10;
+}
+.base-card {
+  width: 100%;
+  max-width: 300px;
+  margin: 20px 0;
+  margin-left: var(--ml, 0);
+  transition: all 0.3s ease-in-out;
+  transform: rotate(var(--rot, 0deg));
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+  z-index: var(--cz, 0);
+}
+.card-wrapper:hover .base-card {
+  transform: rotate(0deg) translateY(-10px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* ---- Navbar ---- */
+.navbar-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+.icon-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--m-spacing-md);
+}
+.nav-icon {
+  transition: all 0.3s ease;
+  margin-right: -22px;
+}
+.nav-icon:hover {
+  transform: translateY(5px) rotate(5deg);
+  z-index: 20;
+}
+.nav-icon:nth-child(2n):hover {
+  transform: translateY(5px) translateX(-3px) rotate(-5deg);
+}
+.nav-icon:nth-child(3n):hover {
+  transform: translateY(5px) translateX(3px) rotate(5deg);
+}
+.nav-icon:last-child {
+  margin-right: 0;
+}
+@media (max-width: 480px) {
+  .nav-icon {
+    margin-right: -15px;
+  }
+}
+.nav-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--m-color-dark-text);
+}
+html[data-scheme="dark"] .nav-name {
+  color: var(--m-color-white);
+}
+.m-ai.burger {
+  color: var(--m-color-dark-text);
+}
+html[data-scheme="dark"] .m-ai.burger {
+  color: var(--m-color-white);
+}
+
+/* ---- Mobile drawer (Mantine Drawer: position top, size 100%) ---- */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000000;
+}
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000000;
+  background: var(--m-color-body);
+  padding: var(--m-spacing-md);
+  overflow-y: auto;
+}
+.drawer-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--m-spacing-md);
+}
+.drawer-close {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: var(--m-radius-default);
+  cursor: pointer;
+  color: var(--m-color-text);
+  font-size: 28px;
+  line-height: 1;
+}
+.drawer-close:hover {
+  background: var(--m-color-default-hover);
+}

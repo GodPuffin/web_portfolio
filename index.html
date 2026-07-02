@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
+    <title>Marcus's Website</title>
+    <meta name="description" content="Marcus's personal website showcasing projects, experience, and more." />
+    <link rel="shortcut icon" href="/favicon.svg" />
+
+    <!-- OpenGraph -->
+    <meta property="og:title" content="Marcus's Website" />
+    <meta property="og:description" content="Marcus's personal website showcasing projects, experience, and more." />
+    <meta property="og:url" content="https://www.marcus-lee.net/" />
+    <meta property="og:site_name" content="Marcus's Website" />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Marcus's Website" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Marcus's Website" />
+    <meta name="twitter:description" content="Marcus's personal website showcasing projects, experience, and more." />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+    <!-- No-flash color scheme: set data-scheme before first paint (default light) -->
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem("portfolio-color-scheme");
+          document.documentElement.dataset.scheme = s === "dark" ? "dark" : "light";
+        } catch (e) {
+          document.documentElement.dataset.scheme = "light";
+        }
+      })();
+    </script>
+
+    <link data-trunk rel="css" href="styles/reset.css" />
+    <link data-trunk rel="css" href="styles/tokens.css" />
+    <link data-trunk rel="css" href="styles/fonts.css" />
+    <link data-trunk rel="css" href="styles/components.css" />
+    <link data-trunk rel="css" href="styles/animations.css" />
+
+    <link data-trunk rel="rust" data-wasm-opt="0" />
+  </head>
+  <body></body>
+</html>
