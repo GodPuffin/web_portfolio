@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css"
 import { ColorSchemeScript, MantineProvider } from "@mantine/core"
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { theme } from "../theme"
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <MantineProvider theme={theme}>{children}</MantineProvider>
+        <Analytics />
       </body>
     </html>
   )
