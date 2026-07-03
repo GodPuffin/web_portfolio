@@ -104,6 +104,9 @@
 /* .nav-float is the physics transform layer (desktop, driven by src/physics.rs)
    and carries the overlap; the icon inside keeps its own hover transform. */
 .nav-float {
+  /* flex (not block) so the inline-flex icon generates no line box / descender
+     strut — the wrapper collapses to the icon's exact box in every browser. */
+  display: flex;
   will-change: transform;
   margin-right: -22px;
 }
