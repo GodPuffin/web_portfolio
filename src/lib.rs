@@ -13,6 +13,7 @@ mod hooks;
 mod icons;
 mod navbar;
 mod not_found;
+mod physics;
 mod projects;
 mod section_container;
 mod theme;

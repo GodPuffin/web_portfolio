@@ -38,6 +38,8 @@ pub fn BaseCard(
     let card_style =
         format!("--ml:{ml};--cz:{z};--card-padding:var(--m-spacing-lg);--pr:var(--m-radius-md);");
     let wrapper_style = move || format!("--rot:{rotation}deg;transition-delay:{}s;", delay.get());
+    // `--i` staggers the pure-CSS mobile bob so the cards float out of sync.
+    let float_style = format!("--i:{index};");
 
     view! {
         <div
@@ -46,8 +48,12 @@ pub fn BaseCard(
             class:in-view=move || should.get()
             style=wrapper_style
         >
-            <div class="m-card base-card" data-border="true" style=card_style>
-                {children()}
+            // Dedicated transform layer for the physics field (desktop) / CSS
+            // bob (mobile), kept separate from the card's own rotation + hover.
+            <div class="card-float" style=float_style>
+                <div class="m-card base-card" data-border="true" style=card_style>
+                    {children()}
+                </div>
             </div>
         </div>
     }
