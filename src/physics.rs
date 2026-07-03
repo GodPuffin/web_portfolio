@@ -27,24 +27,28 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::{HtmlElement, MediaQueryList};
 
+/// The self-rescheduling requestAnimationFrame closure. Stored in an `Rc` it
+/// captures so it can reschedule (or stop) itself each frame.
+type RafHandle = Rc<RefCell<Option<Closure<dyn FnMut(f64)>>>>;
+
 /// Per-field tuning. Cards are big and slow; navbar icons are small, tightly
 /// packed, and snappier.
 pub struct FieldConfig {
     /// CSS selector for the transform-layer elements inside the group.
     pub selector: &'static str,
-    pub k_home: f64,      // spring back to the slot
-    pub damp: f64,        // velocity damping (underdamped -> a little bounce)
-    pub k_pointer: f64,   // pointer shove (acceleration at contact)
-    pub pointer_r: f64,   // pointer influence radius (px)
-    pub k_link: f64,      // neighbour coupling
-    pub link_r: f64,      // two items couple when their slots are within this (px)
+    pub k_home: f64,        // spring back to the slot
+    pub damp: f64,          // velocity damping (underdamped -> a little bounce)
+    pub k_pointer: f64,     // pointer shove (acceleration at contact)
+    pub pointer_r: f64,     // pointer influence radius (px)
+    pub k_link: f64,        // neighbour coupling
+    pub link_r: f64,        // two items couple when their slots are within this (px)
     pub link_deadzone: f64, // ignore gaps this small so the idle float stays independent
-    pub ambient: f64,     // idle float amplitude (px)
-    pub wx: f64,          // idle float angular frequency, x (rad/s)
-    pub wy: f64,          // idle float angular frequency, y (rad/s)
-    pub max_disp: f64,    // clamp so an item never flies off its slot
-    pub max_vel: f64,     // clamp velocity (px/s)
-    pub phase_step: f64,  // idle-float phase increment per item
+    pub ambient: f64,       // idle float amplitude (px)
+    pub wx: f64,            // idle float angular frequency, x (rad/s)
+    pub wy: f64,            // idle float angular frequency, y (rad/s)
+    pub max_disp: f64,      // clamp so an item never flies off its slot
+    pub max_vel: f64,       // clamp velocity (px/s)
+    pub phase_step: f64,    // idle-float phase increment per item
 }
 
 /// Big, slowly-floating cards.
@@ -160,8 +164,8 @@ fn init(group: HtmlElement, cfg: &'static FieldConfig) {
         let mv = Closure::<dyn FnMut(web_sys::MouseEvent)>::new(move |e: web_sys::MouseEvent| {
             p.set((e.client_x() as f64, e.client_y() as f64, true));
         });
-        let _ = window()
-            .add_event_listener_with_callback("pointermove", mv.as_ref().unchecked_ref());
+        let _ =
+            window().add_event_listener_with_callback("pointermove", mv.as_ref().unchecked_ref());
         mv.forget();
 
         // The pointer leaving the page, or the tab losing focus, releases the
@@ -173,8 +177,7 @@ fn init(group: HtmlElement, cfg: &'static FieldConfig) {
         });
         let _ = doc_element()
             .add_event_listener_with_callback("pointerleave", release.as_ref().unchecked_ref());
-        let _ =
-            window().add_event_listener_with_callback("blur", release.as_ref().unchecked_ref());
+        let _ = window().add_event_listener_with_callback("blur", release.as_ref().unchecked_ref());
         release.forget();
     }
 
@@ -184,7 +187,9 @@ fn init(group: HtmlElement, cfg: &'static FieldConfig) {
         let vis = visible.clone();
         let cb = Closure::<dyn FnMut(js_sys::Array, web_sys::IntersectionObserver)>::new(
             move |entries: js_sys::Array, _o: web_sys::IntersectionObserver| {
-                if let Some(entry) = entries.get(0).dyn_ref::<web_sys::IntersectionObserverEntry>()
+                if let Some(entry) = entries
+                    .get(0)
+                    .dyn_ref::<web_sys::IntersectionObserverEntry>()
                 {
                     vis.set(entry.is_intersecting());
                 }
@@ -211,7 +216,7 @@ fn init(group: HtmlElement, cfg: &'static FieldConfig) {
     // restart it — clearing the item list so the loop re-scans the DOM — when we
     // return to the active state. The self-referential Rc keeps the closure
     // alive for the app's lifetime (the container never unmounts).
-    let f: Rc<RefCell<Option<Closure<dyn FnMut(f64)>>>> = Rc::new(RefCell::new(None));
+    let f: RafHandle = Rc::new(RefCell::new(None));
     {
         let f2 = f.clone();
         let group = group.clone();
@@ -296,7 +301,10 @@ fn init(group: HtmlElement, cfg: &'static FieldConfig) {
 
     // Re-arm whenever we leave the standing-down state (mobile -> desktop, or
     // reduced-motion turned off). Both fire this same handler.
-    for mql in [mobile_mql.as_ref(), reduced_mql.as_ref()].into_iter().flatten() {
+    for mql in [mobile_mql.as_ref(), reduced_mql.as_ref()]
+        .into_iter()
+        .flatten()
+    {
         let rearm = rearm.clone();
         let cb = Closure::<dyn FnMut(web_sys::MediaQueryListEvent)>::new(
             move |_e: web_sys::MediaQueryListEvent| rearm(),
