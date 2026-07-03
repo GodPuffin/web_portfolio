@@ -1,8 +1,7 @@
 # Marcus's Portfolio
 
-[![Made in Montreal](https://img.shields.io/badge/Made_in-Montreal_🇨🇦-C25B5B?style=flat-square)](https://www.marcus-lee.net/)
-[![Rust](https://img.shields.io/badge/Rust-CE422B?style=flat-square&logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![WebAssembly](https://img.shields.io/badge/WebAssembly-654FF0?style=flat-square&logo=webassembly&logoColor=white)](https://webassembly.org/)
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/flag/ca.svg?mode=dark"><img alt="Built in Canada" src="https://shieldcn.dev/flag/ca.svg?mode=light"></picture>
+<picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/badge/Rust-000000.svg?logo=rust&amp;logoColor=fff&amp;variant=branded&amp;mode=dark"><img alt="Rust" src="https://shieldcn.dev/badge/Rust-000000.svg?logo=rust&amp;logoColor=fff&amp;variant=branded&amp;mode=light"></picture>
 
 My personal website — [marcus-lee.net](https://www.marcus-lee.net/) — written in Rust/WASM with [Leptos](https://leptos.dev/).
 
