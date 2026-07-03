@@ -1,0 +1,38 @@
+/* Minimal reset — reproduces the parts of Mantine's global reset that affect layout. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+body {
+  margin: 0;
+  font-family: var(--m-font-family);
+  font-size: var(--m-font-size-md);
+  line-height: var(--m-line-height);
+  background-color: var(--m-color-body);
+  color: var(--m-color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

@@ -1,0 +1,40 @@
+[package]
+name = "web_portfolio"
+version = "0.1.0"
+edition = "2021"
+description = "Marcus's portfolio, rewritten in Rust/WASM with Leptos"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = { version = "0.8", features = ["csr"] }
+# Pinned exactly: the Vercel build installs a matching wasm-bindgen CLI so
+# Trunk uses it instead of downloading a glibc-linked binary. Keep in sync
+# with WASM_BINDGEN_VERSION in vercel-build.sh.
+wasm-bindgen = "=0.2.126"
+js-sys = "0.3"
+console_error_panic_hook = "0.1"
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  "Window",
+  "Document",
+  "Element",
+  "Storage",
+  "Location",
+  "MediaQueryList",
+  "MediaQueryListEvent",
+  "EventTarget",
+  "Event",
+  "IntersectionObserver",
+  "IntersectionObserverEntry",
+  "IntersectionObserverInit",
+]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
