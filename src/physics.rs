@@ -149,24 +149,82 @@ fn init(group: HtmlElement, is_mobile: ReadSignal<bool>) {
     // (sections never unmount), the standard wasm-bindgen rAF pattern.
     let last_t = Rc::new(Cell::new(0.0f64));
     let dirty = Rc::new(Cell::new(false));
-    // Watched (not read-once) so toggling reduced-motion ON after load also
-    // stands the engine down — the CSS `!important` already hides the motion,
-    // this stops the per-frame reflow behind it.
+    let running = Rc::new(Cell::new(false));
+    // Watched live (not read once) so toggling reduced-motion — or crossing the
+    // mobile breakpoint — after load takes effect without a reload.
     let reduced_mql = window()
         .match_media("(prefers-reduced-motion: reduce)")
         .ok()
         .flatten();
+
+    // The rAF step reschedules itself ONLY while active. When it stands down
+    // (reduced-motion or the narrow/touch layout, which hands off to the CSS
+    // bob) it stops the loop entirely, so the battery-sensitive path does no
+    // per-frame work; the re-arm triggers below restart it when we reactivate.
     let f: Rc<RefCell<Option<Closure<dyn FnMut(f64)>>>> = Rc::new(RefCell::new(None));
-    let g = f.clone();
-    *g.borrow_mut() = Some(Closure::<dyn FnMut(f64)>::new(move |t: f64| {
-        let reduced = reduced_mql.as_ref().map(|m| m.matches()).unwrap_or(false);
-        step(t, &cards, &ptr, &visible, &last_t, &dirty, is_mobile, reduced);
-        if let Some(cb) = f.borrow().as_ref() {
-            let _ = window().request_animation_frame(cb.as_ref().unchecked_ref());
-        }
-    }));
-    let _ = window()
-        .request_animation_frame(g.borrow().as_ref().unwrap().as_ref().unchecked_ref());
+    {
+        let f2 = f.clone();
+        let cards = cards.clone();
+        let ptr = ptr.clone();
+        let visible = visible.clone();
+        let last_t = last_t.clone();
+        let dirty = dirty.clone();
+        let running = running.clone();
+        let reduced_mql = reduced_mql.clone();
+        *f.borrow_mut() = Some(Closure::<dyn FnMut(f64)>::new(move |t: f64| {
+            let reduced = reduced_mql.as_ref().map(|m| m.matches()).unwrap_or(false);
+            let standing_down = reduced || is_mobile.get_untracked();
+            step(t, &cards, &ptr, &visible, &last_t, &dirty, standing_down);
+            if standing_down {
+                running.set(false); // re-arm restarts us if we reactivate
+                return;
+            }
+            if running.get() {
+                if let Some(cb) = f2.borrow().as_ref() {
+                    let _ = window().request_animation_frame(cb.as_ref().unchecked_ref());
+                }
+            }
+        }));
+    }
+
+    // (Re)start the loop when it isn't already running.
+    let rearm: Rc<dyn Fn()> = {
+        let f = f.clone();
+        let running = running.clone();
+        let last_t = last_t.clone();
+        Rc::new(move || {
+            if running.get() {
+                return;
+            }
+            running.set(true);
+            last_t.set(0.0); // reset dt after an idle gap
+            if let Some(cb) = f.borrow().as_ref() {
+                let _ = window().request_animation_frame(cb.as_ref().unchecked_ref());
+            }
+        })
+    };
+
+    // Arm on desktop, and whenever the viewport returns to it from mobile.
+    {
+        let rearm = rearm.clone();
+        Effect::new(move |_| {
+            if !is_mobile.get() {
+                rearm();
+            }
+        });
+    }
+    // Arm when reduced-motion is turned back off.
+    if let Some(mql) = reduced_mql.as_ref() {
+        let cb = Closure::<dyn FnMut(web_sys::MediaQueryListEvent)>::new(
+            move |e: web_sys::MediaQueryListEvent| {
+                if !e.matches() {
+                    rearm();
+                }
+            },
+        );
+        let _ = mql.add_event_listener_with_callback("change", cb.as_ref().unchecked_ref());
+        cb.forget();
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -177,8 +235,7 @@ fn step(
     visible: &Rc<Cell<bool>>,
     last_t: &Rc<Cell<f64>>,
     dirty: &Rc<Cell<bool>>,
-    is_mobile: ReadSignal<bool>,
-    reduced: bool,
+    standing_down: bool,
 ) {
     // dt in seconds, clamped so the first frame and tab-switches don't jump.
     let prev = last_t.get();
@@ -189,15 +246,12 @@ fn step(
         ((t - prev) / 1000.0).clamp(0.0, 0.033)
     };
 
-    if !visible.get() {
-        return;
-    }
-
-    // Stand down for reduced-motion or the narrow/touch layout (which hands off
-    // to the CSS bob). Clear the transform we left behind (once) and reset each
-    // card's motion so returning to the active state starts from its slot
-    // instead of snapping back a stale displacement.
-    if reduced || is_mobile.get_untracked() {
+    // Standing down (reduced-motion or the narrow/touch layout, which hands off
+    // to the CSS bob): clear the transform we left behind (once) and reset each
+    // card's motion so a later return starts from its slot instead of snapping
+    // back a stale displacement. Done before the visibility gate so the reset
+    // still happens on the frame the caller then stops the loop.
+    if standing_down {
         if dirty.get() {
             for c in cards.borrow_mut().iter_mut() {
                 let _ = c.el.style().remove_property("transform");
@@ -208,6 +262,10 @@ fn step(
             }
             dirty.set(false);
         }
+        return;
+    }
+
+    if !visible.get() {
         return;
     }
 
