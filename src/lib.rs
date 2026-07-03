@@ -19,14 +19,10 @@ mod theme;
 mod ui;
 mod welcome;
 
-/// Build date (YYYY-MM-DD), injected by build.rs; empty if unavailable.
-pub fn build_date() -> String {
-    let bt = env!("BUILD_TIME");
-    if bt.len() >= 10 {
-        bt[..10].to_string()
-    } else {
-        String::new()
-    }
+/// ISO-8601 UTC build timestamp, injected by build.rs. The footer formats it
+/// at runtime in the visitor's timezone.
+pub fn build_time() -> &'static str {
+    env!("BUILD_TIME")
 }
 
 #[wasm_bindgen(start)]

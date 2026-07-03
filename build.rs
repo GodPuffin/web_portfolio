@@ -19,6 +19,10 @@ fn main() {
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_secs() as i64)
         .unwrap_or(0);
-    let (y, m, d) = civil_from_days(secs / 86400);
-    println!("cargo:rustc-env=BUILD_TIME={y:04}-{m:02}-{d:02}");
+    let (y, mo, d) = civil_from_days(secs / 86400);
+    // Emit a full ISO-8601 UTC timestamp; the footer formats it at runtime in
+    // the visitor's own timezone (like the original `new Date(BUILD_TIME)`).
+    let tod = secs.rem_euclid(86400);
+    let (h, mi, s) = (tod / 3600, (tod % 3600) / 60, tod % 60);
+    println!("cargo:rustc-env=BUILD_TIME={y:04}-{mo:02}-{d:02}T{h:02}:{mi:02}:{s:02}Z");
 }

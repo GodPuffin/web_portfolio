@@ -97,7 +97,7 @@ pub fn Navbar() -> impl IntoView {
                                 variant="default"
                                 size="xl"
                                 class="nav-icon theme-toggle"
-                                aria_label="Toggle color scheme"
+                                aria_label="Toggle theme"
                                 on_click=Callback::new(move |()| theme.toggle())
                             >
                                 {move || {
@@ -137,7 +137,6 @@ pub fn Navbar() -> impl IntoView {
                                         size="xl"
                                         full_width=true
                                         href=l.href
-                                        target="_blank"
                                         left=(l.icon)(24, 2.0)
                                     >
                                         {l.label}
@@ -148,11 +147,14 @@ pub fn Navbar() -> impl IntoView {
                         <Button
                             size="xl"
                             full_width=true
-                            left=if theme.is_dark() {
-                                icons::sun(24, 2.0).into_any()
-                            } else {
-                                icons::moon_stars(24, 2.0).into_any()
-                            }
+                            left=(move || {
+                                if theme.is_dark() {
+                                    icons::sun(24, 2.0).into_any()
+                                } else {
+                                    icons::moon_stars(24, 2.0).into_any()
+                                }
+                            })
+                                .into_any()
                             on_click=Callback::new(move |()| theme.toggle())
                         >
                             "Toggle Theme"

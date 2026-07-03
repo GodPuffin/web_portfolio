@@ -23,11 +23,14 @@ pub fn ActionIcon(
     #[prop(optional, into)] hover_color: String,
     #[prop(optional, into)] href: String,
     #[prop(optional, into)] target: String,
+    #[prop(optional, into)] rel: String,
     #[prop(optional, into)] aria_label: String,
     #[prop(optional)] on_click: Option<Callback<()>>,
     #[prop(optional, into)] class: String,
     children: Children,
 ) -> impl IntoView {
+    // Render `rel` only when provided so bare links (navbar) stay attribute-free.
+    let rel_attr = (!rel.is_empty()).then_some(rel);
     let mut st = format!("--ai-size:{};", ai_size_px(&size));
     if variant == "transparent" && !color.is_empty() {
         st.push_str(&format!("--ai-c:{};", text_color(&color)));
@@ -45,7 +48,15 @@ pub fn ActionIcon(
     );
     if !href.is_empty() {
         view! {
-            <a class=cls data-variant=variant style=st href=href target=target aria-label=aria_label>
+            <a
+                class=cls
+                data-variant=variant
+                style=st
+                href=href
+                target=target
+                rel=rel_attr
+                aria-label=aria_label
+            >
                 {children()}
             </a>
         }
@@ -88,6 +99,7 @@ pub fn Button(
         _ => ("36px", "18px", "var(--m-font-size-sm)"),
     };
     let st = format!("--btn-h:{h};--btn-px:{px};--btn-fz:{fz};");
+    let target_attr = (!target.is_empty()).then_some(target);
     let has_left = left.is_some();
     let cls = format!(
         "m-btn {} {class}",
@@ -101,7 +113,7 @@ pub fn Button(
     };
     if !href.is_empty() {
         view! {
-            <a class=cls data-lsec=has_left.to_string() style=st href=href target=target>
+            <a class=cls data-lsec=has_left.to_string() style=st href=href target=target_attr>
                 {inner}
             </a>
         }

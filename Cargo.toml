@@ -9,7 +9,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 leptos = { version = "0.8", features = ["csr"] }
-wasm-bindgen = "0.2"
+# Pinned exactly: the Vercel build installs a matching wasm-bindgen CLI so
+# Trunk uses it instead of downloading a glibc-linked binary. Keep in sync
+# with WASM_BINDGEN_VERSION in vercel-build.sh.
+wasm-bindgen = "=0.2.126"
 js-sys = "0.3"
 console_error_panic_hook = "0.1"
 

@@ -17,7 +17,7 @@ fn link_icon(kind: LinkKind) -> AnyView {
 
 fn link_label(kind: LinkKind) -> &'static str {
     match kind {
-        LinkKind::Github => "GitHub",
+        LinkKind::Github => "Github",
         LinkKind::Devpost => "Devpost",
         LinkKind::Website => "Website",
     }
@@ -55,6 +55,7 @@ pub fn Projects() -> impl IntoView {
                                                     color="dimmed"
                                                     href=l.href
                                                     target="_blank"
+                                                    rel="noopener noreferrer"
                                                     aria_label=link_label(l.kind)
                                                 >
                                                     {link_icon(l.kind)}
