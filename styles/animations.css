@@ -37,6 +37,38 @@
 .card-wrapper:hover {
   z-index: 10;
 }
+
+/* Physics layer. On desktop the transform is driven per-frame from JS
+   (src/physics.rs) so the cards float and push/pull each other; `will-change`
+   keeps each on its own compositor layer. On narrow/touch screens JS stands
+   down and this pure-CSS bob takes over, staggered per card via `--i`. */
+.card-float {
+  will-change: transform;
+}
+@media (max-width: 768px) {
+  .card-float {
+    animation: card-bob 6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -0.8s);
+  }
+}
+@keyframes card-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+/* Respect reduced-motion: no float, no bob, no leftover inline transform. */
+@media (prefers-reduced-motion: reduce) {
+  .card-float,
+  .nav-float {
+    animation: none !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
 .base-card {
   width: 100%;
   max-width: 300px;
@@ -69,25 +101,35 @@
   flex-shrink: 0;
   gap: var(--m-spacing-md);
 }
+/* .nav-float is the physics transform layer (desktop, driven by src/physics.rs)
+   and carries the overlap; the icon inside keeps its own hover transform. */
+.nav-float {
+  /* flex (not block) so the inline-flex icon generates no line box / descender
+     strut — the wrapper collapses to the icon's exact box in every browser. */
+  display: flex;
+  will-change: transform;
+  margin-right: -22px;
+}
+.nav-float:last-child {
+  margin-right: 0;
+}
+.nav-float:hover {
+  z-index: 20;
+}
 .nav-icon {
   transition: all 0.3s ease;
-  margin-right: -22px;
 }
 .nav-icon:hover {
   transform: translateY(5px) rotate(5deg);
-  z-index: 20;
 }
-.nav-icon:nth-child(2n):hover {
+.nav-float:nth-child(2n) .nav-icon:hover {
   transform: translateY(5px) translateX(-3px) rotate(-5deg);
 }
-.nav-icon:nth-child(3n):hover {
+.nav-float:nth-child(3n) .nav-icon:hover {
   transform: translateY(5px) translateX(3px) rotate(5deg);
 }
-.nav-icon:last-child {
-  margin-right: 0;
-}
 @media (max-width: 480px) {
-  .nav-icon {
+  .nav-float {
     margin-right: -15px;
   }
 }

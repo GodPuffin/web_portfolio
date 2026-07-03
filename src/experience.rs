@@ -2,6 +2,7 @@ use crate::base_card::BaseCard;
 use crate::card_header::CardHeader;
 use crate::data::{badge_color, EXPERIENCES};
 use crate::hooks::{use_in_view, use_is_mobile};
+use crate::physics::{use_physics_field, CARDS};
 use crate::section_container::SectionContainer;
 use crate::ui::*;
 use leptos::html;
@@ -12,6 +13,7 @@ pub fn Experience() -> impl IntoView {
     let group_ref = NodeRef::<html::Div>::new();
     let group_in_view = use_in_view(group_ref, 0.1);
     let is_mobile = use_is_mobile();
+    use_physics_field(group_ref, &CARDS);
     view! {
         <SectionContainer title="Experience" emoji="📝" group_ref=group_ref>
             {EXPERIENCES

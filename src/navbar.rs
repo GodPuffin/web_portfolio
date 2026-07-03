@@ -1,7 +1,9 @@
 use crate::hooks::use_is_mobile;
 use crate::icons;
+use crate::physics::{use_physics_field, NAV_ICONS};
 use crate::theme::use_theme;
 use crate::ui::*;
+use leptos::html;
 use leptos::prelude::*;
 
 struct NavLink {
@@ -51,11 +53,16 @@ pub fn Navbar() -> impl IntoView {
     let theme = use_theme();
     let is_mobile = use_is_mobile();
     let (drawer, set_drawer) = signal(false);
+    // The icon row physically pushes/pulls under the pointer, like the cards.
+    // `nav_group` is the always-mounted Group; the icons inside it come and go
+    // with the mobile breakpoint, and the field re-scans them when it restarts.
+    let nav_group = NodeRef::<html::Div>::new();
+    use_physics_field(nav_group, &NAV_ICONS);
 
     view! {
         <Container size="xs" class="navbar-wrapper" style="padding:var(--m-spacing-xl);">
             <Paper radius="xl" with_border=true style="padding:var(--m-spacing-md);">
-                <Group justify="space-between" wrap="nowrap">
+                <Group justify="space-between" wrap="nowrap" node_ref=nav_group>
                     <Text size="lg" ml="md" class="nav-name">"Marcus Lee"</Text>
 
                     <Show
@@ -79,35 +86,41 @@ pub fn Navbar() -> impl IntoView {
                                 .into_iter()
                                 .map(|l| {
                                     view! {
-                                        <ActionIcon
-                                            variant="default"
-                                            size="xl"
-                                            class="nav-icon"
-                                            hover_color=l.hover
-                                            href=l.href
-                                            target="_blank"
-                                            aria_label=l.label
-                                        >
-                                            {(l.icon)(24, 2.0)}
-                                        </ActionIcon>
+                                        // .nav-float is the physics transform layer, kept
+                                        // separate from the icon's own hover transform.
+                                        <div class="nav-float">
+                                            <ActionIcon
+                                                variant="default"
+                                                size="xl"
+                                                class="nav-icon"
+                                                hover_color=l.hover
+                                                href=l.href
+                                                target="_blank"
+                                                aria_label=l.label
+                                            >
+                                                {(l.icon)(24, 2.0)}
+                                            </ActionIcon>
+                                        </div>
                                     }
                                 })
                                 .collect_view()}
-                            <ActionIcon
-                                variant="default"
-                                size="xl"
-                                class="nav-icon theme-toggle"
-                                aria_label="Toggle theme"
-                                on_click=Callback::new(move |()| theme.toggle())
-                            >
-                                {move || {
-                                    if theme.is_dark() {
-                                        icons::sun(24, 2.0).into_any()
-                                    } else {
-                                        icons::moon_stars(24, 2.0).into_any()
-                                    }
-                                }}
-                            </ActionIcon>
+                            <div class="nav-float">
+                                <ActionIcon
+                                    variant="default"
+                                    size="xl"
+                                    class="nav-icon theme-toggle"
+                                    aria_label="Toggle theme"
+                                    on_click=Callback::new(move |()| theme.toggle())
+                                >
+                                    {move || {
+                                        if theme.is_dark() {
+                                            icons::sun(24, 2.0).into_any()
+                                        } else {
+                                            icons::moon_stars(24, 2.0).into_any()
+                                        }
+                                    }}
+                                </ActionIcon>
+                            </div>
                         </div>
                     </Show>
                 </Group>

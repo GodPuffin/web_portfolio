@@ -2,6 +2,7 @@ use crate::base_card::BaseCard;
 use crate::data::{badge_color, Link, LinkKind, PROJECTS};
 use crate::hooks::{use_in_view, use_is_mobile};
 use crate::icons;
+use crate::physics::{use_physics_field, CARDS};
 use crate::section_container::SectionContainer;
 use crate::ui::*;
 use leptos::html;
@@ -28,6 +29,7 @@ pub fn Projects() -> impl IntoView {
     let group_ref = NodeRef::<html::Div>::new();
     let group_in_view = use_in_view(group_ref, 0.1);
     let is_mobile = use_is_mobile();
+    use_physics_field(group_ref, &CARDS);
     view! {
         <SectionContainer title="Projects" emoji="🚀" mt=50 group_ref=group_ref>
             {PROJECTS
