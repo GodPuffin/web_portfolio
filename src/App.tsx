@@ -135,7 +135,7 @@ export default function App() {
               {openProject ? (
                 <motion.div
                   key="project-actions"
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-1.5 sm:gap-2"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}

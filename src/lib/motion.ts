@@ -33,8 +33,8 @@ export const spring = {
   snappy: { type: "spring", stiffness: 400, damping: 40, mass: 1 },
   /** Shared-element / layout moves: heavier, more deliberate. */
   smooth: { type: "spring", stiffness: 220, damping: 32, mass: 1 },
-  /** Playful: hover affordances and small toggles. */
-  bouncy: { type: "spring", stiffness: 500, damping: 24, mass: 0.8 },
+  /** Lively but settled: entrances and small toggles. Just shy of overshoot. */
+  bouncy: { type: "spring", stiffness: 460, damping: 34, mass: 0.8 },
 } satisfies Record<string, Transition>;
 
 /** Standard fade-and-rise, used for most scroll reveals. */

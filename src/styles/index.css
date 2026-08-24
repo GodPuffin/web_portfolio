@@ -175,7 +175,13 @@
     .shell {
       position: relative;
       grid-template-areas: "title" "actions";
-      grid-template-columns: minmax(0, 50%);
+      /*
+       * The stage starts at 46% of the viewport and the column is inset 17%,
+       * so the column may occupy at most the 29% between them. Expressed
+       * against the padded content box, that is ~35%. Anything wider lets a
+       * long subtitle run underneath the cards.
+       */
+      grid-template-columns: minmax(0, 35%);
       grid-template-rows: auto auto;
       align-content: center;
       justify-items: start;

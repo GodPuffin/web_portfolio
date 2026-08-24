@@ -42,7 +42,7 @@ export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout
   const showSocials = isAbout || contactOpen;
 
   return (
-    <motion.div layout transition={spring.smooth} className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 lg:justify-start">
+    <motion.div layout transition={spring.smooth} className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 lg:justify-start">
       <motion.div layout transition={spring.smooth}>
         <IconButton
           label={isAbout ? "Back to projects" : "About Marcus"}
@@ -53,9 +53,9 @@ export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout
             <motion.span
               key={isAbout ? "back" : "person"}
               className="grid place-items-center"
-              initial={{ opacity: 0, rotate: -60, scale: 0.6 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: 60, scale: 0.6 }}
+              initial={{ opacity: 0, scale: 0.75 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.75 }}
               transition={spring.bouncy}
             >
               {isAbout ? <BackIcon /> : <PersonIcon />}
@@ -94,10 +94,10 @@ export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout
                 <motion.div
                   key={social.kind}
                   layout
-                  initial={{ opacity: 0, scale: 0.5, x: -14 }}
+                  initial={{ opacity: 0, scale: 0.7, x: -10 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.5, x: -14 }}
-                  transition={{ ...spring.bouncy, delay: i * 0.045 }}
+                  exit={{ opacity: 0, scale: 0.7, x: -10 }}
+                  transition={{ ...spring.bouncy, delay: i * 0.035 }}
                 >
                   <IconButton label={social.label} href={social.href}>
                     <Glyph />

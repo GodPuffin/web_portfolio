@@ -13,20 +13,30 @@ type Props = {
 /**
  * Deck geometry.
  *
- * Each card is hinged at the edge facing the active one: cards above pivot on
- * their bottom edge, cards below on their top. Rotating about that hinge reads
- * as a fold rather than a slide, which is the whole effect. The hinge can flip
- * sides only while a card passes through offset 0, where rotation is zero and
- * the transform origin has no visible consequence, so the swap never jumps.
+ * The deck behaves like a hand of cards rather than a wheel. Cards waiting
+ * their turn lie face up in a staggered stack below; the active card has risen
+ * to the middle and rotated a quarter turn to face the viewer; spent cards lie
+ * face down in a matching stack above. Advancing therefore reads as one card
+ * lifting off the lower stack, turning over as it comes up, and settling onto
+ * the upper one, and the whole motion runs in reverse going back.
  *
- * Steps back add only a little more offset but a lot more tilt and depth, so
- * far layers compress against the viewport edge into nested trapezoids.
+ * A card at exactly 90 degrees is edge on, so the stacks are only visible
+ * because they sit away from the vanishing point: perspective projects a flat
+ * card offset from centre as a foreshortened band. Its depth is what makes the
+ * stacks readable, so the vertical offsets below are load bearing, not spacing.
  */
 const VISIBLE_STEPS = 3;
-const offsetY = (step: number) => 1.3 + (step - 1) * 0.16;
-const tiltDeg = (step: number) => 52 + (step - 1) * 9;
-const depthPx = (step: number) => 210 + (step - 1) * 200;
-const fade = (step: number) => (step === 0 ? 1 : Math.max(0, 0.66 - (step - 1) * 0.26));
+/**
+ * Exactly 90 degrees leaves a card edge on, where CSS cannot tell front from
+ * back and browsers pick arbitrarily. Waiting cards stop just short of the
+ * quarter turn so their faces stay up; spent cards carry just past it so they
+ * present their reverse. The swap happens mid-animation, which is the flip.
+ */
+const faceUp = (step: number) => 86 - (step - 1) * 2;
+const faceDown = (step: number) => -(94 + (step - 1) * 2);
+const stackY = (step: number) => 0.95 + (step - 1) * 0.09;
+const stackZ = (step: number) => (step - 1) * 60;
+const fade = (step: number) => (step === 0 ? 1 : Math.max(0, 1 - (step - 1) * 0.28));
 
 export function DeckCard({ project, offset, expanded, onOpen }: Props) {
   const isActive = offset === 0;
@@ -42,15 +52,12 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
   return (
     <motion.div
       className="absolute inset-0 grid place-items-center"
-      style={{
-        zIndex: 10 - step,
-        pointerEvents: isActive ? "auto" : "none",
-        transformOrigin: offset > 0 ? "50% 0%" : "50% 100%",
-      }}
+      style={{ zIndex: 10 - step, pointerEvents: isActive ? "auto" : "none" }}
       animate={{
-        y: `${direction * offsetY(step) * 100}%`,
-        rotateX: -direction * tiltDeg(step),
-        z: step === 0 ? 0 : -depthPx(step),
+        y: `${direction * stackY(step) * 100}%`,
+        // Below the middle a card lies face up, above it face down.
+        rotateX: step === 0 ? 0 : direction > 0 ? faceUp(step) : faceDown(step),
+        z: -stackZ(step),
         opacity: fade(step),
       }}
       transition={spring.smooth}
@@ -62,36 +69,45 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
         aria-hidden={!isActive}
         tabIndex={isActive ? 0 : -1}
         layoutId={`card-${project.slug}`}
-        className="relative block h-full w-full cursor-pointer overflow-hidden bg-ghost text-left shadow-card"
-        style={{ borderRadius: 28 }}
+        className="relative block h-full w-full cursor-pointer text-left"
+        // `overflow: hidden` would collapse this to a flat plane and kill the
+        // back face, so rounding and clipping live on each face instead.
+        style={{ transformStyle: "preserve-3d" }}
         whileHover={isActive && !expanded ? { scale: 1.015 } : undefined}
         whileTap={isActive && !expanded ? { scale: 0.985 } : undefined}
         transition={spring.smooth}
       >
-        {/*
-          Content stays mounted for every visible card and crossfades on
-          opacity, so a card's artwork resolves as it turns to face the viewer
-          instead of popping in once it lands.
-        */}
-        <motion.div
-          className="absolute inset-0"
-          initial={false}
-          animate={{ opacity: isActive ? 1 : 0 }}
-          transition={{ ...spring.smooth, opacity: { duration: 0.28 } }}
+        <div
+          className="shadow-card absolute inset-0 overflow-hidden rounded-[28px]"
+          style={{ backfaceVisibility: "hidden" }}
         >
           <div
             className="absolute inset-0"
             style={{ background: `linear-gradient(160deg, ${cover.from}, ${cover.to})` }}
           />
-          <Preview project={project} />
-          <motion.span
-            layoutId={`card-title-${project.slug}`}
-            className="text-label absolute bottom-5 left-6 font-semibold"
-            style={{ color: onDark ? "#ffffff" : "#0a0a0a" }}
+          {/* Detail resolves as the card turns to face the viewer. */}
+          <motion.div
+            className="absolute inset-0"
+            initial={false}
+            animate={{ opacity: isActive ? 1 : 0 }}
+            transition={{ duration: 0.3 }}
           >
-            {project.title}
-          </motion.span>
-        </motion.div>
+            <Preview project={project} />
+            <motion.span
+              layoutId={`card-title-${project.slug}`}
+              className="text-label absolute bottom-5 left-6 font-semibold"
+              style={{ color: onDark ? "#ffffff" : "#0a0a0a" }}
+            >
+              {project.title}
+            </motion.span>
+          </motion.div>
+        </div>
+
+        {/* The reverse of the card, seen only on the spent stack above. */}
+        <div
+          className="bg-ghost shadow-card absolute inset-0 overflow-hidden rounded-[28px] ring-1 ring-black/[0.03]"
+          style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
+        />
       </motion.button>
     </motion.div>
   );
