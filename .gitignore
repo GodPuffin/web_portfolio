@@ -122,5 +122,5 @@ dist
 .DS_Store
 .vercel
 
-# Rust / WASM build
-/target
+node_modules
+*.tsbuildinfo

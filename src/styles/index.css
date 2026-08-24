@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   PP Neue Montreal — licensed Free for Personal Use. Subset to latin and
+   converted to woff2; `swap` so first paint is never blocked on the font.
+   --------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/NeueMontreal-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("/fonts/NeueMontreal-Semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal Mono";
+  src: url("/fonts/NeueMontrealMono-Book.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/**
+ * Design tokens, read off the reference design language.
+ *
+ * The palette is deliberately tiny: a warm off-white ground, near-black ink,
+ * one warm grey, and pure white for raised surfaces. Emphasis in body copy is
+ * carried by *colour* (grey → ink), never by weight — see `.lede` below.
+ */
+@theme {
+  /* ---- colour ------------------------------------------------------- */
+  --color-ground: #f2f1ef;
+  --color-ghost: #e7e5e2;
+  --color-surface: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-muted: #a5a29e;
+  --color-hairline: #e2e0dd;
+
+  /* ---- type --------------------------------------------------------- */
+  --font-sans: "Neue Montreal", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Neue Montreal Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --text-title: clamp(1.15rem, 1.9vw + 0.7rem, 2.9rem);
+  --text-title--line-height: 1.06;
+  --text-title--letter-spacing: -0.028em;
+  --text-title--font-weight: 600;
+
+  --text-lede: clamp(1.05rem, 0.9vw + 0.7rem, 1.85rem);
+  --text-lede--line-height: 1.28;
+  --text-lede--letter-spacing: -0.02em;
+
+  --text-label: 0.9375rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: -0.01em;
+
+  /* ---- shape -------------------------------------------------------- */
+  --radius-control: 1rem;
+  --radius-card: 1.75rem;
+  --radius-card-lg: 2rem;
+
+  /* ---- elevation ---------------------------------------------------- */
+  /* Barely-there. The design reads as flat paper with a hint of lift. */
+  --shadow-control: 0 1px 2px rgb(0 0 0 / 0.05), 0 4px 12px rgb(0 0 0 / 0.03);
+  --shadow-card: 0 2px 6px rgb(0 0 0 / 0.06), 0 18px 40px rgb(0 0 0 / 0.07);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-ground);
+    /* The deck owns wheel input; never rubber-band the document behind it. */
+    overscroll-behavior: none;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-synthesis-weight: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-ground);
+  }
+}
+
+@layer components {
+  /**
+   * Body copy where the paragraph is muted and the salient phrase is inked —
+   * the reference's core typographic device. Wrap the phrase in <em>, which
+   * stays semantic for screen readers while we override the italics.
+   */
+  .lede {
+    color: var(--color-muted);
+    font-size: var(--text-lede);
+    line-height: var(--text-lede--line-height);
+    letter-spacing: var(--text-lede--letter-spacing);
+    font-weight: 400;
+  }
+
+  /* Emphasis is carried by colour alone — the weight must not shift. */
+  .lede em {
+    color: var(--color-ink);
+    font-style: normal;
+    font-weight: inherit;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /**
+   * The app shell.
+   *
+   * Phone: a single column — title, deck, actions — with the deck taking the
+   * slack so it stays optically centred. Desktop: two columns, where title and
+   * actions stack in the left one and the deck spans both rows on the right.
+   * Grid areas rather than duplicated markup, so the deck element is never
+   * remounted across the breakpoint and its layout animations survive a resize.
+   */
+  .shell {
+    display: grid;
+    height: 100%;
+    grid-template-areas: "title" "deck" "actions";
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .shell > .shell-title { grid-area: title; }
+  .shell > .shell-deck {
+    grid-area: deck;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-height: 0;
+  }
+  .shell > .shell-actions { grid-area: actions; }
+
+  @media (min-width: 1024px) {
+    .shell {
+      position: relative;
+      grid-template-areas: "title" "actions";
+      grid-template-columns: minmax(0, 50%);
+      grid-template-rows: auto auto;
+      align-content: center;
+      justify-items: start;
+      text-align: left;
+    }
+
+    /*
+     * The deck leaves the grid flow entirely on desktop. In-flow it spanned
+     * both rows, and its height then forced the title and action rows apart —
+     * absolute positioning keeps the identity column tightly stacked while the
+     * deck stays optically centred in the right-hand two-fifths.
+     */
+    .shell > .shell-deck {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 46%;
+      right: 4%;
+      /* The mobile rule sets width:100%, which would win over `right` here. */
+      width: auto;
+      display: grid;
+      place-items: center;
+    }
+  }
+}
