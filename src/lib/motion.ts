@@ -52,21 +52,3 @@ export const stagger = (staggerChildren = 0.06, delayChildren = 0): Variants => 
   hidden: {},
   visible: { transition: { staggerChildren, delayChildren } },
 });
-
-/**
- * Per-route enter/exit. Kept deliberately restrained: the reference language
- * is "seamless", which means the transition should be felt more than seen.
- */
-export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 12 },
-  animate: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: duration.base, ease: ease.out },
-  },
-  exit: {
-    opacity: 0,
-    y: -8,
-    transition: { duration: duration.fast, ease: ease.in },
-  },
-};

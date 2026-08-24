@@ -13,17 +13,19 @@ type Props = {
 /**
  * Deck geometry.
  *
- * Cards do not recede linearly. Each step back adds only a little more offset
- * but a lot more tilt and depth, so the far cards compress against the
- * viewport edge into a stack of nested trapezoids that fades out, rather than
- * marching evenly off-screen. `DEPTH` is what does most of the work: combined
- * with the shared perspective origin it shrinks each layer inside the one in
- * front of it.
+ * Each card is hinged at the edge facing the active one: cards above pivot on
+ * their bottom edge, cards below on their top. Rotating about that hinge reads
+ * as a fold rather than a slide, which is the whole effect. The hinge can flip
+ * sides only while a card passes through offset 0, where rotation is zero and
+ * the transform origin has no visible consequence, so the swap never jumps.
+ *
+ * Steps back add only a little more offset but a lot more tilt and depth, so
+ * far layers compress against the viewport edge into nested trapezoids.
  */
 const VISIBLE_STEPS = 3;
-const offsetY = (step: number) => 1.22 + (step - 1) * 0.17;
-const tiltDeg = (step: number) => 34 + (step - 1) * 10;
-const depthPx = (step: number) => 300 + (step - 1) * 240;
+const offsetY = (step: number) => 1.3 + (step - 1) * 0.16;
+const tiltDeg = (step: number) => 52 + (step - 1) * 9;
+const depthPx = (step: number) => 210 + (step - 1) * 200;
 const fade = (step: number) => (step === 0 ? 1 : Math.max(0, 0.66 - (step - 1) * 0.26));
 
 export function DeckCard({ project, offset, expanded, onOpen }: Props) {
@@ -40,7 +42,11 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
   return (
     <motion.div
       className="absolute inset-0 grid place-items-center"
-      style={{ zIndex: 10 - step, pointerEvents: isActive ? "auto" : "none" }}
+      style={{
+        zIndex: 10 - step,
+        pointerEvents: isActive ? "auto" : "none",
+        transformOrigin: offset > 0 ? "50% 0%" : "50% 100%",
+      }}
       animate={{
         y: `${direction * offsetY(step) * 100}%`,
         rotateX: -direction * tiltDeg(step),
@@ -56,31 +62,36 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
         aria-hidden={!isActive}
         tabIndex={isActive ? 0 : -1}
         layoutId={`card-${project.slug}`}
-        className="relative block w-full h-full overflow-hidden shadow-card cursor-pointer text-left"
+        className="relative block h-full w-full cursor-pointer overflow-hidden bg-ghost text-left shadow-card"
         style={{ borderRadius: 28 }}
         whileHover={isActive && !expanded ? { scale: 1.015 } : undefined}
         whileTap={isActive && !expanded ? { scale: 0.985 } : undefined}
         transition={spring.smooth}
       >
-        {/* Receding cards read as blank ghost surfaces, as in the reference. */}
-        {isActive ? (
-          <>
-            <div
-              className="absolute inset-0"
-              style={{ background: `linear-gradient(160deg, ${cover.from}, ${cover.to})` }}
-            />
-            <Preview project={project} />
-            <motion.span
-              layoutId={`card-title-${project.slug}`}
-              className="absolute left-6 bottom-5 text-label font-semibold"
-              style={{ color: onDark ? "#ffffff" : "#0a0a0a" }}
-            >
-              {project.title}
-            </motion.span>
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-ghost ring-1 ring-black/[0.03]" />
-        )}
+        {/*
+          Content stays mounted for every visible card and crossfades on
+          opacity, so a card's artwork resolves as it turns to face the viewer
+          instead of popping in once it lands.
+        */}
+        <motion.div
+          className="absolute inset-0"
+          initial={false}
+          animate={{ opacity: isActive ? 1 : 0 }}
+          transition={{ ...spring.smooth, opacity: { duration: 0.28 } }}
+        >
+          <div
+            className="absolute inset-0"
+            style={{ background: `linear-gradient(160deg, ${cover.from}, ${cover.to})` }}
+          />
+          <Preview project={project} />
+          <motion.span
+            layoutId={`card-title-${project.slug}`}
+            className="text-label absolute bottom-5 left-6 font-semibold"
+            style={{ color: onDark ? "#ffffff" : "#0a0a0a" }}
+          >
+            {project.title}
+          </motion.span>
+        </motion.div>
       </motion.button>
     </motion.div>
   );
@@ -96,7 +107,7 @@ function Preview({ project }: { project: Project }) {
     <div className="absolute inset-x-[12%] top-[22%] bottom-[18%] overflow-hidden rounded-lg bg-white/95 shadow-lg">
       <motion.div
         className="flex flex-col gap-2 p-4"
-        animate={{ y: ["0%", "-22%"] }}
+        animate={{ y: ["0%", "-11%"] }}
         transition={{ duration: 14, ease: "linear", repeat: Infinity, repeatType: "reverse" }}
       >
         <div className="flex gap-1.5 pb-1">
@@ -104,16 +115,16 @@ function Preview({ project }: { project: Project }) {
           <span className="size-1.5 rounded-full bg-black/15" />
           <span className="size-1.5 rounded-full bg-black/15" />
         </div>
-        <p className="text-[0.6rem] leading-snug font-semibold tracking-tight text-ink">
+        <p className="text-ink text-[0.6rem] leading-snug font-semibold tracking-tight">
           {project.title}
         </p>
         {project.tech.map((tech) => (
-          <span key={tech} className="text-[0.5rem] leading-tight text-muted">
+          <span key={tech} className="text-muted text-[0.5rem] leading-tight">
             {tech}
           </span>
         ))}
         <span className="mt-1 h-px w-full bg-black/10" />
-        <p className="text-[0.5rem] leading-relaxed text-muted">{project.description}</p>
+        <p className="text-muted text-[0.5rem] leading-relaxed">{project.description}</p>
       </motion.div>
       <div className="absolute inset-0 rounded-lg ring-1 ring-black/5" />
     </div>

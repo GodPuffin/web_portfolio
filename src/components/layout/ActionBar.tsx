@@ -3,6 +3,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { spring } from "@/lib/motion";
 import { socials } from "@/content";
 import {
+  BackIcon,
   ChatIcon,
   CloseIcon,
   DownloadIcon,
@@ -22,47 +23,81 @@ const socialIcon = {
 } as const;
 
 type Props = {
+  isAbout: boolean;
   contactOpen: boolean;
   onToggleContact: () => void;
-  onAbout: () => void;
+  onToggleAbout: () => void;
 };
 
 /**
- * Contextual control row. The contact button morphs in place into a black
- * close circle and the social buttons unfurl to its right; `layout` on every
- * child is what makes the existing buttons slide aside rather than jump.
+ * Contextual control row.
+ *
+ * The leading button is one element across every state: it holds its position
+ * and morphs between "about" and "back" rather than being swapped out, so the
+ * row reads as reconfiguring itself instead of re-rendering. On the about view
+ * the contact toggle gives way to the full social set; elsewhere that set
+ * unfurls from the toggle on demand.
  */
-export function ActionBar({ contactOpen, onToggleContact, onAbout }: Props) {
-  return (
-    <motion.div layout transition={spring.smooth} className="flex items-center gap-3">
-      <motion.div layout transition={spring.smooth}>
-        <IconButton label="About Marcus" onClick={onAbout}>
-          <PersonIcon />
-        </IconButton>
-      </motion.div>
+export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout }: Props) {
+  const showSocials = isAbout || contactOpen;
 
+  return (
+    <motion.div layout transition={spring.smooth} className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 lg:justify-start">
       <motion.div layout transition={spring.smooth}>
         <IconButton
-          label={contactOpen ? "Close contact links" : "Contact"}
-          onClick={onToggleContact}
-          active={contactOpen}
+          label={isAbout ? "Back to projects" : "About Marcus"}
+          onClick={onToggleAbout}
+          active={isAbout}
         >
-          {contactOpen ? <CloseIcon /> : <ChatIcon />}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={isAbout ? "back" : "person"}
+              className="grid place-items-center"
+              initial={{ opacity: 0, rotate: -60, scale: 0.6 }}
+              animate={{ opacity: 1, rotate: 0, scale: 1 }}
+              exit={{ opacity: 0, rotate: 60, scale: 0.6 }}
+              transition={spring.bouncy}
+            >
+              {isAbout ? <BackIcon /> : <PersonIcon />}
+            </motion.span>
+          </AnimatePresence>
         </IconButton>
       </motion.div>
 
+      {/* The contact toggle only exists off the about view, where it is redundant. */}
       <AnimatePresence mode="popLayout">
-        {contactOpen
+        {isAbout ? null : (
+          <motion.div
+            key="contact-toggle"
+            layout
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            transition={spring.snappy}
+          >
+            <IconButton
+              label={contactOpen ? "Close contact links" : "Contact"}
+              onClick={onToggleContact}
+              active={contactOpen}
+            >
+              {contactOpen ? <CloseIcon /> : <ChatIcon />}
+            </IconButton>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="popLayout">
+        {showSocials
           ? socials.map((social, i) => {
               const Glyph = socialIcon[social.kind];
               return (
                 <motion.div
                   key={social.kind}
                   layout
-                  initial={{ opacity: 0, scale: 0.6, x: -12 }}
+                  initial={{ opacity: 0, scale: 0.5, x: -14 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
-                  exit={{ opacity: 0, scale: 0.6, x: -12 }}
-                  transition={{ ...spring.bouncy, delay: i * 0.035 }}
+                  exit={{ opacity: 0, scale: 0.5, x: -14 }}
+                  transition={{ ...spring.bouncy, delay: i * 0.045 }}
                 >
                   <IconButton label={social.label} href={social.href}>
                     <Glyph />

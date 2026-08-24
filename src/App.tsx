@@ -1,19 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
 import { useLocation, useNavigate } from "react-router";
+import { AboutPanel } from "@/components/about/AboutPanel";
+import { Intro } from "@/components/about/Intro";
 import { Deck } from "@/components/deck/Deck";
 import { Dots } from "@/components/deck/Dots";
 import { ExpandedCard } from "@/components/deck/ExpandedCard";
 import { ActionBar } from "@/components/layout/ActionBar";
 import { TitleBlock } from "@/components/layout/TitleBlock";
 import { IconButton } from "@/components/ui/IconButton";
-import {
-  CollapseIcon,
-  DevpostIcon,
-  ExternalIcon,
-  GithubIcon,
-} from "@/components/ui/Icon";
-import { About } from "@/routes/About";
+import { CollapseIcon, DevpostIcon, ExternalIcon, GithubIcon } from "@/components/ui/Icon";
 import { useDeck } from "@/lib/useDeck";
 import { spring } from "@/lib/motion";
 import { profile, projects, projectBySlug } from "@/content";
@@ -34,10 +30,11 @@ const linkLabel: Record<LinkKind, string> = {
 /**
  * One persistent shell for the whole site.
  *
- * Routes drive *state*, not subtree swaps: the deck stays mounted across every
- * view so shared-element transitions have something to morph from. Unmounting
- * on navigation is precisely what makes most sites feel like documents rather
- * than apps.
+ * Every view is the same three regions reconfiguring: an identity column, a
+ * stage on the right, and a control row. Routes drive state rather than
+ * swapping subtrees, so nothing unmounts on navigation and shared-element
+ * transitions always have something to morph between. Unmounting on navigation
+ * is precisely what makes most sites feel like documents rather than apps.
  */
 export default function App() {
   const location = useLocation();
@@ -69,28 +66,26 @@ export default function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [close, contactOpen, isAbout, isExpanded]);
 
+  // Leaving the about view retires the contact row it had absorbed.
+  useEffect(() => {
+    if (isAbout) setContactOpen(false);
+  }, [isAbout]);
+
   const active = projects[index]!;
 
   return (
     <LayoutGroup>
-      <main className="fixed inset-0 overflow-hidden bg-ground">
-        {/*
-          About covers the shell completely, so the shell must leave the
-          accessibility tree with it: otherwise its heading and controls stay
-          focusable behind the panel and the page exposes two <h1>s at once.
-        */}
-        <div
-          className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]"
-          inert={isAbout}
-        >
+      <main className="bg-ground fixed inset-0 overflow-hidden">
+        <div className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]">
           {/* ---- identity ---- */}
           <div className="shell-title z-20 lg:pr-10">
             <TitleBlock
               title={openProject?.title ?? profile.name}
-              subtitle={openProject?.kind}
+              subtitle={openProject?.kind ?? (isAbout ? profile.role : undefined)}
               transitionKey={openSlug ?? "home"}
             />
-            <AnimatePresence initial={false}>
+
+            <AnimatePresence initial={false} mode="wait">
               {openProject ? (
                 <motion.p
                   key={openProject.slug}
@@ -102,19 +97,36 @@ export default function App() {
                 >
                   {openProject.description}
                 </motion.p>
+              ) : isAbout ? (
+                <Intro key="about-intro" className="mt-8 hidden max-w-md lg:flex" />
               ) : null}
             </AnimatePresence>
           </div>
 
-          {/* ---- deck ---- */}
+          {/* ---- stage: the deck, or the about panel in its place ---- */}
           <div className="shell-deck">
-            <Deck
-              projects={projects}
-              index={index}
-              expanded={isExpanded}
-              hiddenSlug={openSlug}
-              onOpen={(slug) => navigate(`/work/${slug}`)}
-            />
+            <AnimatePresence mode="wait" initial={false}>
+              {isAbout ? (
+                <AboutPanel key="about" />
+              ) : (
+                <motion.div
+                  key="deck"
+                  className="grid h-full w-full place-items-center"
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  transition={spring.smooth}
+                >
+                  <Deck
+                    projects={projects}
+                    index={index}
+                    expanded={isExpanded}
+                    hiddenSlug={openSlug}
+                    onOpen={(slug) => navigate(`/work/${slug}`)}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* ---- controls ---- */}
@@ -147,16 +159,17 @@ export default function App() {
                 </motion.div>
               ) : (
                 <motion.div
-                  key="home-actions"
+                  key="shell-actions"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={spring.snappy}
                 >
                   <ActionBar
+                    isAbout={isAbout}
                     contactOpen={contactOpen}
                     onToggleContact={() => setContactOpen((v) => !v)}
-                    onAbout={() => navigate("/about")}
+                    onToggleAbout={() => navigate(isAbout ? "/" : "/about")}
                   />
                 </motion.div>
               )}
@@ -179,17 +192,18 @@ export default function App() {
           ) : null}
         </AnimatePresence>
 
-        {/* ---- about panel ---- */}
-        <AnimatePresence>{isAbout ? <About onClose={close} /> : null}</AnimatePresence>
-
-        {!isExpanded && !isAbout ? (
-          <Dots count={projects.length} index={index} onSelect={go} />
-        ) : null}
+        <AnimatePresence>
+          {!isExpanded && !isAbout ? (
+            <Dots count={projects.length} index={index} onSelect={go} />
+          ) : null}
+        </AnimatePresence>
 
         <span className="sr-only" aria-live="polite">
           {isExpanded
             ? openProject!.title
-            : `${active.title}, project ${index + 1} of ${projects.length}`}
+            : isAbout
+              ? "About"
+              : `${active.title}, project ${index + 1} of ${projects.length}`}
         </span>
       </main>
     </LayoutGroup>

@@ -10,9 +10,13 @@ type Props = {
 /** Pagination rail pinned to the right edge, vertically centred. */
 export function Dots({ count, index, onSelect }: Props) {
   return (
-    <nav
+    <motion.nav
       aria-label="Projects"
-      className="fixed right-3 sm:right-7 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center"
+      className="fixed top-1/2 right-3 z-30 flex -translate-y-1/2 flex-col items-center sm:right-7"
+      initial={{ opacity: 0, x: 12 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 12 }}
+      transition={spring.snappy}
     >
       {Array.from({ length: count }, (_, i) => (
         <button
@@ -34,6 +38,6 @@ export function Dots({ count, index, onSelect }: Props) {
           />
         </button>
       ))}
-    </nav>
+    </motion.nav>
   );
 }
