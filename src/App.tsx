@@ -85,20 +85,34 @@ export default function App() {
               transitionKey={openSlug ?? "home"}
             />
 
+            {/*
+              Height is animated, not just opacity. The identity column is
+              centred in its row, so a block that holds its full height through
+              its exit and then unmounts drops the column by its whole height in
+              one frame, snapping the name upward. Collapsing the height is what
+              keeps the name travelling smoothly on the way out.
+
+              The top margin lives on the inner element: margins sit outside the
+              animated box and would snap on their own.
+            */}
             <AnimatePresence initial={false} mode="wait">
-              {openProject ? (
-                <motion.p
-                  key={openProject.slug}
-                  className="lede mt-8 hidden max-w-md lg:block"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={spring.snappy}
+              {openProject || isAbout ? (
+                <motion.div
+                  key={openProject ? openProject.slug : "about-intro"}
+                  className="hidden overflow-hidden lg:block"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={spring.smooth}
                 >
-                  {openProject.description}
-                </motion.p>
-              ) : isAbout ? (
-                <Intro key="about-intro" className="mt-8 hidden max-w-md lg:flex" />
+                  <div className="max-w-md pt-8">
+                    {openProject ? (
+                      <p className="lede">{openProject.description}</p>
+                    ) : (
+                      <Intro />
+                    )}
+                  </div>
+                </motion.div>
               ) : null}
             </AnimatePresence>
           </div>
@@ -165,7 +179,6 @@ export default function App() {
               ) : (
                 <motion.div
                   key="shell-actions"
-                  layout="position"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
