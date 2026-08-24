@@ -29,6 +29,9 @@ function wrappedOffset(raw: number, count: number) {
 }
 
 export function Deck({ projects, index, expanded, hiddenSlug, onOpen }: Props) {
+  // The furthest a card can sit from the middle before offsets wrap around.
+  const edgeStep = Math.floor(projects.length / 2);
+
   return (
     <div
       className="relative w-full grid place-items-center"
@@ -46,6 +49,7 @@ export function Deck({ projects, index, expanded, hiddenSlug, onOpen }: Props) {
               key={project.slug}
               project={project}
               offset={wrappedOffset(i - index, projects.length)}
+              edgeStep={edgeStep}
               expanded={expanded}
               onOpen={() => onOpen(project.slug)}
             />

@@ -6,6 +6,8 @@ import type { Project } from "@/content";
 type Props = {
   project: Project;
   offset: number;
+  /** The step at which offsets wrap around; that layer is held invisible. */
+  edgeStep: number;
   expanded: boolean;
   onOpen: () => void;
 };
@@ -36,9 +38,22 @@ const faceUp = (step: number) => 86 - (step - 1) * 2;
 const faceDown = (step: number) => -(94 + (step - 1) * 2);
 const stackY = (step: number) => 0.95 + (step - 1) * 0.09;
 const stackZ = (step: number) => (step - 1) * 60;
-const fade = (step: number) => (step === 0 ? 1 : Math.max(0, 1 - (step - 1) * 0.28));
 
-export function DeckCard({ project, offset, expanded, onOpen }: Props) {
+/**
+ * Opacity by distance from the middle.
+ *
+ * The wrap-around layer is held fully transparent on purpose. The deck is a
+ * ring, so on every advance one card has to travel from the end of the upper
+ * stack to the end of the lower one; at zero opacity that journey happens out
+ * of sight, instead of a card visibly sailing down the screen and joining the
+ * bottom of the stack. `edgeStep` comes from the project count rather than
+ * being hardcoded, so adding a project cannot quietly expose the trip again.
+ */
+const FADE = [1, 1, 0.5];
+const fade = (step: number, edgeStep: number) =>
+  step >= edgeStep ? 0 : (FADE[step] ?? 0);
+
+export function DeckCard({ project, offset, edgeStep, expanded, onOpen }: Props) {
   const isActive = offset === 0;
   const cover = coverFor(project.slug);
   const onDark = cover.scheme === "dark";
@@ -58,7 +73,7 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
         // Below the middle a card lies face up, above it face down.
         rotateX: step === 0 ? 0 : direction > 0 ? faceUp(step) : faceDown(step),
         z: -stackZ(step),
-        opacity: fade(step),
+        opacity: fade(step, edgeStep),
       }}
       transition={spring.smooth}
     >
@@ -78,20 +93,24 @@ export function DeckCard({ project, offset, expanded, onOpen }: Props) {
         transition={spring.smooth}
       >
         <div
-          className="shadow-card absolute inset-0 overflow-hidden rounded-[28px]"
+          className="bg-ghost shadow-card absolute inset-0 overflow-hidden rounded-[28px] ring-1 ring-black/[0.03]"
           style={{ backfaceVisibility: "hidden" }}
         >
-          <div
-            className="absolute inset-0"
-            style={{ background: `linear-gradient(160deg, ${cover.from}, ${cover.to})` }}
-          />
-          {/* Detail resolves as the card turns to face the viewer. */}
+          {/*
+            Waiting and spent cards read as blank grey stock. Colour and detail
+            arrive together as a card turns to face the viewer, so the stacks
+            stay quiet and the middle card is the only thing with any weight.
+          */}
           <motion.div
             className="absolute inset-0"
             initial={false}
             animate={{ opacity: isActive ? 1 : 0 }}
             transition={{ duration: 0.3 }}
           >
+            <div
+              className="absolute inset-0"
+              style={{ background: `linear-gradient(160deg, ${cover.from}, ${cover.to})` }}
+            />
             <Preview project={project} />
             <motion.span
               layoutId={`card-title-${project.slug}`}
