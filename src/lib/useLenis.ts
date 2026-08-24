@@ -6,7 +6,7 @@ import { useReducedMotion } from "./useReducedMotion";
  * Smooth scrolling for one scroll container.
  *
  * Scoped to an element rather than the document because the deck owns wheel
- * input on the home view — a document-level Lenis would fight it. Only the
+ * input on the home view: a document-level Lenis would fight it. Only the
  * about panel actually scrolls, so only the about panel gets this.
  */
 export const useLenis = (ref: RefObject<HTMLElement | null>) => {
@@ -21,7 +21,7 @@ export const useLenis = (ref: RefObject<HTMLElement | null>) => {
       wrapper,
       content: wrapper.firstElementChild as HTMLElement,
       duration: 1.05,
-      // Exponential falloff: quick to respond, long tail — trackpad momentum
+      // Exponential falloff: quick to respond, long tail: trackpad momentum
       // rather than a slow uniform lerp.
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,

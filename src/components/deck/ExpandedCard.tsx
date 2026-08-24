@@ -12,7 +12,7 @@ type Props = {
  * The opened state of a deck card.
  *
  * Shares `layoutId` with its collapsed counterpart in `DeckCard`, so Motion
- * interpolates position, size and radius between the two — the card is never
+ * interpolates position, size and radius between the two: the card is never
  * unmounted and remounted, which is what sells it as one continuous object.
  *
  * Deliberately holds no prose: the title, category and description all live in

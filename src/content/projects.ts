@@ -2,7 +2,7 @@ import type { Project } from "./types";
 
 /**
  * Slugs are part of the URL contract (/work/:slug) and feed the shared-element
- * transition between the index card and the detail view — keep them stable.
+ * transition between the index card and the detail view: keep them stable.
  */
 export const projects: Project[] = [
   {

@@ -4,7 +4,7 @@
  * primary discipline, plus a light/dark hint so the caption picks a legible ink.
  *
  * Drop a real screenshot at `public/projects/<slug>.png` and it takes over
- * automatically — see `DeckCard`.
+ * automatically: see `DeckCard`.
  */
 export type Cover = {
   from: string;

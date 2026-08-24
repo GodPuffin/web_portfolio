@@ -9,7 +9,7 @@ export const profile = {
   email: "fromportfolio@puffin.mozmail.com",
   /** Short line for hero / meta description. */
   tagline:
-    "Computer Engineering student building across mechanical, electrical, and software — lately, AI tools for everyday use.",
+    "Computer Engineering student building across mechanical, electrical, and software, lately AI tools for everyday use.",
   /** Longer intro, ported from the previous site's welcome section. */
   intro: [
     "I'm a Computer Engineering student at the University of British Columbia, with a background in Computer Science and Math.",

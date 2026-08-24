@@ -12,11 +12,11 @@ import type { Transition, Variants } from "motion/react";
 
 /** Custom easing curves. `standard` is the workhorse for non-spring tweens. */
 export const ease = {
-  /** Decelerate — entering elements, most reveals. */
+  /** Decelerate: entering elements, most reveals. */
   out: [0.16, 1, 0.3, 1],
-  /** Accelerate — exiting elements leaving the viewport. */
+  /** Accelerate: exiting elements leaving the viewport. */
   in: [0.7, 0, 0.84, 0],
-  /** Symmetric — colour/opacity crossfades where no direction is implied. */
+  /** Symmetric: colour/opacity crossfades where no direction is implied. */
   standard: [0.65, 0, 0.35, 1],
 } as const;
 
@@ -29,11 +29,11 @@ export const duration = {
 } as const;
 
 export const spring = {
-  /** Default UI spring — snappy, barely overshoots. */
+  /** Default UI spring: snappy, barely overshoots. */
   snappy: { type: "spring", stiffness: 400, damping: 40, mass: 1 },
-  /** Shared-element / layout moves — heavier, more deliberate. */
+  /** Shared-element / layout moves: heavier, more deliberate. */
   smooth: { type: "spring", stiffness: 220, damping: 32, mass: 1 },
-  /** Playful — hover affordances and small toggles. */
+  /** Playful: hover affordances and small toggles. */
   bouncy: { type: "spring", stiffness: 500, damping: 24, mass: 0.8 },
 } satisfies Record<string, Transition>;
 
@@ -54,7 +54,7 @@ export const stagger = (staggerChildren = 0.06, delayChildren = 0): Variants => 
 });
 
 /**
- * Per-route enter/exit. Kept deliberately restrained — the reference language
+ * Per-route enter/exit. Kept deliberately restrained: the reference language
  * is "seamless", which means the transition should be felt more than seen.
  */
 export const pageVariants: Variants = {

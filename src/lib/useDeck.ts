@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Options = {
   count: number;
-  /** Input is ignored while a card is expanded — the deck is "behind" it. */
+  /** Input is ignored while a card is expanded: the deck is "behind" it. */
   locked?: boolean;
 };
 

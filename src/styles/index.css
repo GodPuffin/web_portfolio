@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   PP Neue Montreal — licensed Free for Personal Use. Subset to latin and
+   PP Neue Montreal: licensed Free for Personal Use. Subset to latin and
    converted to woff2; `swap` so first paint is never blocked on the font.
    --------------------------------------------------------------------------- */
 @font-face {
@@ -33,7 +33,7 @@
  *
  * The palette is deliberately tiny: a warm off-white ground, near-black ink,
  * one warm grey, and pure white for raised surfaces. Emphasis in body copy is
- * carried by *colour* (grey → ink), never by weight — see `.lede` below.
+ * carried by *colour* (grey → ink), never by weight: see `.lede` below.
  */
 @theme {
   /* ---- colour ------------------------------------------------------- */
@@ -109,7 +109,7 @@
 
 @layer components {
   /**
-   * Body copy where the paragraph is muted and the salient phrase is inked —
+   * Body copy where the paragraph is muted and the salient phrase is inked : 
    * the reference's core typographic device. Wrap the phrase in <em>, which
    * stays semantic for screen readers while we override the italics.
    */
@@ -121,7 +121,7 @@
     font-weight: 400;
   }
 
-  /* Emphasis is carried by colour alone — the weight must not shift. */
+  /* Emphasis is carried by colour alone: the weight must not shift. */
   .lede em {
     color: var(--color-ink);
     font-style: normal;
@@ -144,7 +144,7 @@
   /**
    * The app shell.
    *
-   * Phone: a single column — title, deck, actions — with the deck taking the
+   * Phone: a single column: title, deck, actions: with the deck taking the
    * slack so it stays optically centred. Desktop: two columns, where title and
    * actions stack in the left one and the deck spans both rows on the right.
    * Grid areas rather than duplicated markup, so the deck element is never
@@ -183,7 +183,7 @@
 
     /*
      * The deck leaves the grid flow entirely on desktop. In-flow it spanned
-     * both rows, and its height then forced the title and action rows apart —
+     * both rows, and its height then forced the title and action rows apart : 
      * absolute positioning keeps the identity column tightly stacked while the
      * deck stays optically centred in the right-hand two-fifths.
      */

@@ -74,13 +74,21 @@ export default function App() {
   return (
     <LayoutGroup>
       <main className="fixed inset-0 overflow-hidden bg-ground">
-        <div className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]">
+        {/*
+          About covers the shell completely, so the shell must leave the
+          accessibility tree with it: otherwise its heading and controls stay
+          focusable behind the panel and the page exposes two <h1>s at once.
+        */}
+        <div
+          className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]"
+          inert={isAbout}
+        >
           {/* ---- identity ---- */}
           <div className="shell-title z-20 lg:pr-10">
             <TitleBlock
               title={openProject?.title ?? profile.name}
-              subtitle={openProject?.kind ?? profile.role}
-              transitionKey={openSlug ?? (isAbout ? "about" : "home")}
+              subtitle={openProject?.kind}
+              transitionKey={openSlug ?? "home"}
             />
             <AnimatePresence initial={false}>
               {openProject ? (
@@ -129,7 +137,7 @@ export default function App() {
                     return (
                       <IconButton
                         key={link.href}
-                        label={`${openProject.title} — ${linkLabel[link.kind]}`}
+                        label={`${openProject.title}: ${linkLabel[link.kind]}`}
                         href={link.href}
                       >
                         <Glyph />

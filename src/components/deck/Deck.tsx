@@ -14,7 +14,7 @@ type Props = {
  * The 3D card deck.
  *
  * `perspective` lives on the outer box and `preserve-3d` on the inner one, so
- * sibling cards share a single vanishing point — that's what turns the tilted
+ * sibling cards share a single vanishing point: that's what turns the tilted
  * neighbours into trapezoids rather than flatly-scaled rectangles.
  */
 /**

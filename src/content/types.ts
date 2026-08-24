@@ -1,15 +1,12 @@
-export type Position = {
-  title: string;
+/** One company, showing only the most recent role held there. */
+export type Experience = {
+  company: string;
+  role: string;
   date: string;
   description: string;
   skills: string[];
-};
-
-export type Experience = {
-  company: string;
   logo: string;
   darkLogo: string;
-  positions: Position[];
 };
 
 export type Education = {

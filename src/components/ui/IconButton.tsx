@@ -5,7 +5,7 @@ type Props = {
   label: string;
   onClick?: () => void;
   href?: string;
-  /** Active buttons invert to a black circle — the reference's close/back affordance. */
+  /** Active buttons invert to a black circle: the reference's close/back affordance. */
   active?: boolean;
   children: React.ReactNode;
 };
@@ -32,7 +32,7 @@ export function IconButton({ label, onClick, href, active = false, children }: P
     "aria-label": label,
   } as const;
 
-  const icon = <span className="[&>svg]:size-5">{children}</span>;
+  const icon = <span className="[&>svg]:size-[1.35rem]">{children}</span>;
 
   if (href) {
     const external = href.startsWith("http") || href.startsWith("mailto:");

@@ -11,31 +11,41 @@ type Props = {
 };
 
 /**
- * Deck geometry, read off the reference: neighbours sit just over a card-height
- * away, tilted hard enough that perspective foreshortens them into the
- * trapezoidal slivers that peek past the top and bottom of the viewport.
+ * Deck geometry.
+ *
+ * Cards do not recede linearly. Each step back adds only a little more offset
+ * but a lot more tilt and depth, so the far cards compress against the
+ * viewport edge into a stack of nested trapezoids that fades out, rather than
+ * marching evenly off-screen. `DEPTH` is what does most of the work: combined
+ * with the shared perspective origin it shrinks each layer inside the one in
+ * front of it.
  */
-const STEP_RATIO = 1.25;
-const TILT_DEG = 34;
-const DEPTH_PX = 300;
+const VISIBLE_STEPS = 3;
+const offsetY = (step: number) => 1.22 + (step - 1) * 0.17;
+const tiltDeg = (step: number) => 34 + (step - 1) * 10;
+const depthPx = (step: number) => 300 + (step - 1) * 240;
+const fade = (step: number) => (step === 0 ? 1 : Math.max(0, 0.66 - (step - 1) * 0.26));
 
 export function DeckCard({ project, offset, expanded, onOpen }: Props) {
   const isActive = offset === 0;
   const cover = coverFor(project.slug);
   const onDark = cover.scheme === "dark";
 
-  // Beyond two steps the card is fully occluded — don't pay to composite it.
-  if (Math.abs(offset) > 2) return null;
+  const step = Math.abs(offset);
+  // Past the last visible layer the card contributes nothing; don't composite it.
+  if (step > VISIBLE_STEPS) return null;
+
+  const direction = Math.sign(offset);
 
   return (
     <motion.div
       className="absolute inset-0 grid place-items-center"
-      style={{ zIndex: 10 - Math.abs(offset), pointerEvents: isActive ? "auto" : "none" }}
+      style={{ zIndex: 10 - step, pointerEvents: isActive ? "auto" : "none" }}
       animate={{
-        y: `${offset * STEP_RATIO * 100}%`,
-        rotateX: -offset * TILT_DEG,
-        z: -Math.abs(offset) * DEPTH_PX,
-        opacity: Math.abs(offset) > 1 ? 0.5 : 1,
+        y: `${direction * offsetY(step) * 100}%`,
+        rotateX: -direction * tiltDeg(step),
+        z: step === 0 ? 0 : -depthPx(step),
+        opacity: fade(step),
       }}
       transition={spring.smooth}
     >
