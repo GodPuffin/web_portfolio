@@ -105,13 +105,18 @@ export default function App() {
 
           {/* ---- stage: the deck, or the about panel in its place ---- */}
           <div className="shell-deck">
-            <AnimatePresence mode="wait" initial={false}>
+            {/*
+              Both stages occupy the same grid cell so they can crossfade in
+              place. Sequencing them instead would leave the stage empty for a
+              beat in the middle of the transition.
+            */}
+            <AnimatePresence initial={false}>
               {isAbout ? (
                 <AboutPanel key="about" />
               ) : (
                 <motion.div
                   key="deck"
-                  className="grid h-full w-full place-items-center"
+                  className="grid h-full w-full place-items-center [grid-area:1/1]"
                   initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.94 }}
@@ -160,6 +165,7 @@ export default function App() {
               ) : (
                 <motion.div
                   key="shell-actions"
+                  layout="position"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}

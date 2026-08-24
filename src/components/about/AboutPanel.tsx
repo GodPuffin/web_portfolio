@@ -52,7 +52,7 @@ export function AboutPanel() {
 
   return (
     <motion.div
-      className="flex h-full min-h-0 w-full flex-col gap-5 text-left lg:py-16"
+      className="flex h-full min-h-0 w-full flex-col gap-5 text-left [grid-area:1/1] lg:py-16"
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -18 }}
