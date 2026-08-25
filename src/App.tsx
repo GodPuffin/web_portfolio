@@ -76,7 +76,14 @@ export default function App() {
   return (
     <LayoutGroup>
       <main className="bg-ground fixed inset-0 overflow-hidden">
-        <div className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]">
+        {/*
+          The two views want opposite width balances, so the shell is told which
+          one it is showing and the geometry follows in CSS.
+        */}
+        <div
+          className="shell px-6 py-12 sm:px-10 lg:px-0 lg:pl-[17%]"
+          data-view={isAbout ? "about" : "deck"}
+        >
           {/* ---- identity ---- */}
           <div className="shell-title z-20 lg:pr-10">
             <TitleBlock

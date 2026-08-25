@@ -176,10 +176,9 @@
       position: relative;
       grid-template-areas: "title" "actions";
       /*
-       * The stage starts at 46% of the viewport and the column is inset 17%,
-       * so the column may occupy at most the 29% between them. Expressed
-       * against the padded content box, that is ~35%. Anything wider lets a
-       * long subtitle run underneath the cards.
+       * The column is inset 17% and must stop before the stage begins, so its
+       * width is the gap between the two, expressed against the padded content
+       * box. Anything wider lets a long subtitle run underneath the stage.
        */
       grid-template-columns: minmax(0, 35%);
       grid-template-rows: auto auto;
@@ -204,6 +203,22 @@
       width: auto;
       display: grid;
       place-items: center;
+    }
+
+    /*
+     * About needs the opposite balance. Its stage is a narrow column of type,
+     * so the width goes back to the identity column: enough for the role to sit
+     * on one line and the whole social row on one row, neither of which fits in
+     * the third of the viewport the deck's stage leaves behind.
+     */
+    .shell[data-view="about"] {
+      grid-template-columns: minmax(0, 45%);
+    }
+
+    .shell[data-view="about"] > .shell-deck {
+      left: 55%;
+      right: 5%;
+      place-items: center start;
     }
   }
 }
