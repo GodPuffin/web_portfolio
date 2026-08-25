@@ -1,8 +1,0 @@
-/* Only the Medium face is wired up — exactly as the original main.css.
-   700 titles are faux-bolded by the browser; lighter weights stay Medium. */
-@font-face {
-  font-family: "Neue Montreal";
-  src: url("/fonts/NeueMontreal-Medium.otf") format("opentype");
-  font-weight: normal;
-  font-style: normal;
-}
