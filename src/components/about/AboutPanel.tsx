@@ -92,7 +92,7 @@ function Group({ label, rows }: { label: string; rows: Row[] }) {
           </div>
           <p className="text-label text-ink/65">{row.role}</p>
           {row.body ? (
-            <p className="text-muted mt-1 text-[0.8rem] leading-relaxed">{row.body}</p>
+            <p className="text-body mt-1 text-[0.8rem] leading-relaxed">{row.body}</p>
           ) : null}
         </motion.article>
       ))}

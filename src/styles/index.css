@@ -41,7 +41,15 @@
   --color-ghost: #e7e5e2;
   --color-surface: #ffffff;
   --color-ink: #0a0a0a;
+  /*
+     Two greys, not one. `muted` is the reference's supporting tone: the role
+     line under the name, dates, section labels. It sits at 2.3:1, which is
+     right for a label sitting beside its own heading and far too weak for
+     running prose, where it read as washed out. `body` is the prose tone at
+     6:1.
+  */
   --color-muted: #a5a29e;
+  --color-body: #5f5a54;
   --color-hairline: #e2e0dd;
 
 
@@ -177,7 +185,7 @@
    * stays semantic for screen readers while we override the italics.
    */
   .lede {
-    color: var(--color-muted);
+    color: var(--color-body);
     font-size: var(--text-lede);
     line-height: var(--text-lede--line-height);
     letter-spacing: var(--text-lede--letter-spacing);
