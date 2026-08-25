@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { SmoothCorners } from "@lisse/react";
 import { Tabs } from "@/components/ui/Tabs";
 import { Intro } from "./Intro";
 import { duration, ease, spring } from "@/lib/motion";
@@ -113,20 +114,27 @@ function EntryCard({ entry }: { entry: Entry }) {
       }}
       whileHover={{ y: -3 }}
       transition={spring.snappy}
-      className="bg-surface shadow-control flex gap-4 rounded-[1.25rem] p-5"
     >
+      <SmoothCorners
+        corners={{ radius: 20, smoothing: 0.6 }}
+        className="bg-surface shadow-control flex gap-4 p-5"
+      >
       {/*
         Wordmarks and square badges both land here, so the tile is a landscape
         box and the logo is contained rather than filled.
       */}
-      <span className="bg-ground grid h-12 w-16 shrink-0 place-items-center overflow-hidden rounded-xl p-2">
+      <SmoothCorners
+        as="span"
+        corners={{ radius: 12, smoothing: 0.6 }}
+        className="bg-ground grid h-12 w-16 shrink-0 place-items-center overflow-hidden p-2"
+      >
         <img
           src={entry.logo}
           alt=""
           className="max-h-full max-w-full object-contain"
           loading="lazy"
         />
-      </span>
+      </SmoothCorners>
 
       <div className="flex min-w-0 flex-col gap-1">
         <div className="flex flex-wrap items-baseline gap-x-3">
@@ -137,7 +145,8 @@ function EntryCard({ entry }: { entry: Entry }) {
         {entry.body ? (
           <p className="text-muted mt-1 text-[0.85rem] leading-relaxed">{entry.body}</p>
         ) : null}
-      </div>
+        </div>
+      </SmoothCorners>
     </motion.li>
   );
 }

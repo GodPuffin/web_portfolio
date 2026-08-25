@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { motion } from "motion/react";
+import { useSmoothCorners } from "@lisse/react";
 import { spring } from "@/lib/motion";
 import { coverFor } from "@/content/covers";
 import type { Project } from "@/content";
@@ -53,8 +55,21 @@ const FADE = [1, 1, 0.5];
 const fade = (step: number, edgeStep: number) =>
   step >= edgeStep ? 0 : (FADE[step] ?? 0);
 
+/** Corner shape shared by both faces of a card. */
+const CORNERS = { radius: 28, smoothing: 0.6 } as const;
+
 export function DeckCard({ project, offset, edgeStep, expanded, onOpen }: Props) {
   const isActive = offset === 0;
+  const frontRef = useRef<HTMLDivElement>(null);
+  const backRef = useRef<HTMLDivElement>(null);
+
+  // The hook applies clip-path to the element itself. The <SmoothCorners>
+  // component would wrap each face in a div for its SVG effects, and that
+  // wrapper does not carry `absolute inset-0`, so the faces collapse and the
+  // deck disappears. Inside a preserve-3d context the hook is the only safe
+  // form of this.
+  useSmoothCorners(frontRef, CORNERS);
+  useSmoothCorners(backRef, CORNERS);
   const cover = coverFor(project.slug);
   const onDark = cover.scheme === "dark";
 
@@ -92,8 +107,17 @@ export function DeckCard({ project, offset, edgeStep, expanded, onOpen }: Props)
         whileTap={isActive && !expanded ? { scale: 0.985 } : undefined}
         transition={spring.smooth}
       >
+        {/*
+          clip-path clips an element's box-shadow along with everything else,
+          so the shadow rides a plain rounded sibling behind both faces. At this
+          blur the rounded-rect silhouette is indistinguishable from the
+          squircle it sits under.
+        */}
+        <div className="shadow-card absolute inset-0 rounded-[28px]" aria-hidden="true" />
+
         <div
-          className="bg-ghost shadow-card absolute inset-0 overflow-hidden rounded-[28px] ring-1 ring-black/[0.03]"
+          ref={frontRef}
+          className="bg-ghost absolute inset-0 overflow-hidden ring-1 ring-black/[0.03]"
           style={{ backfaceVisibility: "hidden" }}
         >
           {/*
@@ -124,7 +148,8 @@ export function DeckCard({ project, offset, edgeStep, expanded, onOpen }: Props)
 
         {/* The reverse of the card, seen only on the spent stack above. */}
         <div
-          className="bg-ghost shadow-card absolute inset-0 overflow-hidden rounded-[28px] ring-1 ring-black/[0.03]"
+          ref={backRef}
+          className="bg-ghost absolute inset-0 overflow-hidden ring-1 ring-black/[0.03]"
           style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
         />
       </motion.button>
