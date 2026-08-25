@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { generateClipPath } from "@lisse/core";
+import { accentInk, accentTint, type Accent } from "@/content/palette";
 import { spring } from "@/lib/motion";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 
@@ -10,6 +11,8 @@ type Props = {
   href?: string;
   /** Active buttons invert to a black circle: the close/back affordance. */
   active?: boolean;
+  /** Tints the glyph and its wash. Falls back to ink when unset. */
+  accent?: Accent;
   children: React.ReactNode;
 };
 
@@ -34,7 +37,7 @@ const RESTING_RADIUS = 16;
  * toward the pointer and grows slightly, with the glyph leaning further so the
  * two read as parallax. Nothing overshoots.
  */
-export function IconButton({ label, onClick, href, active = false, children }: Props) {
+export function IconButton({ label, onClick, href, active = false, accent, children }: Props) {
   const ref = useRef<HTMLElement>(null);
   const reduced = useReducedMotion();
   const [size, setSize] = useState({ width: 0, height: 0 });
@@ -98,6 +101,10 @@ export function IconButton({ label, onClick, href, active = false, children }: P
     rawY.set(0);
   };
 
+  // An inverted button always carries white; otherwise the accent, if any.
+  const restInk = active ? "#ffffff" : accent ? accentInk(accent) : "#0a0a0a";
+  const wash = accent ? accentTint(accent, 12) : "#ffffff";
+
   const shared = {
     ref: ref as never,
     className:
@@ -110,9 +117,9 @@ export function IconButton({ label, onClick, href, active = false, children }: P
     onMouseMove: track,
     onMouseLeave: release,
     variants: {
-      rest: { scale: 1, color: active ? "#ffffff" : "#0a0a0a" },
-      hover: { scale: 1.06, color: active ? "#ffffff" : "#0a0a0a" },
-      tap: { scale: 0.97, color: active ? "#ffffff" : "#0a0a0a" },
+      rest: { scale: 1, color: restInk },
+      hover: { scale: 1.06, color: restInk },
+      tap: { scale: 0.97, color: restInk },
     },
     transition: spring.snappy,
     "aria-label": label,
@@ -150,8 +157,9 @@ export function IconButton({ label, onClick, href, active = false, children }: P
         style={{ clipPath }}
         variants={{
           rest: { backgroundColor: active ? "#0a0a0a" : "#ffffff" },
-          hover: { backgroundColor: active ? "#0a0a0a" : "#ffffff" },
-          tap: { backgroundColor: active ? "#0a0a0a" : "#ffffff" },
+          // Hover washes the surface in the accent, the way the old navbar did.
+          hover: { backgroundColor: active ? "#0a0a0a" : wash },
+          tap: { backgroundColor: active ? "#0a0a0a" : wash },
         }}
         transition={spring.snappy}
       />

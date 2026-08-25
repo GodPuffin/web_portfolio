@@ -49,3 +49,21 @@ export const accentVar = (accent: Accent) => `var(--color-${accent})`;
 
 /** Contrast-checked variant for type on the ground. */
 export const accentInk = (accent: Accent) => `var(--color-${accent}-ink)`;
+
+/** Light shade, for type sitting on a dark surface. */
+export const accentLit = (accent: Accent) => `var(--color-${accent}-lit)`;
+
+/** The 10% wash the previous site's badges sat on. */
+export const accentTint = (accent: Accent, percent = 10) =>
+  `color-mix(in oklab, var(--color-${accent}) ${percent}%, transparent)`;
+
+/**
+ * Per-network accents, carried over from the old navbar's hover colours.
+ */
+export const SOCIAL_ACCENT: Record<string, Accent> = {
+  github: "green",
+  linkedin: "blue",
+  instagram: "pink",
+  email: "grape",
+  resume: "orange",
+};

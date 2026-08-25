@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { IconButton } from "@/components/ui/IconButton";
 import { spring } from "@/lib/motion";
+import { SOCIAL_ACCENT } from "@/content/palette";
 import { socials } from "@/content";
 import {
   BackIcon,
@@ -109,7 +110,11 @@ export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout
                   exit={{ opacity: 0, scale: 0.7, x: -10 }}
                   transition={{ ...spring.bouncy, delay: i * 0.035 }}
                 >
-                  <IconButton label={social.label} href={social.href}>
+                  <IconButton
+                    label={social.label}
+                    href={social.href}
+                    accent={SOCIAL_ACCENT[social.kind]}
+                  >
                     <Glyph />
                   </IconButton>
                 </motion.div>

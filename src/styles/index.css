@@ -89,35 +89,51 @@
      4.5:1 anywhere on the shipped scale, so those are darkened from shade 9.
      Use the base for fills and marks, the -ink variant for type.
      `brown` had no token on the old site; this is an earth tone in its place.
+     The -lit variant is the light shade the old badges used for type on dark
+     surfaces; the base at 10% is the tint they sat on.
      -------------------------------------------------------------------- */
   --color-blue: #228be6;
   --color-blue-ink: #1864ab;
+  --color-blue-lit: #74c0fc;
   --color-cyan: #15aabf;
   --color-cyan-ink: #0b7285;
+  --color-cyan-lit: #66d9e8;
   --color-grape: #be4bdb;
   --color-grape-ink: #9c36b5;
+  --color-grape-lit: #e599f7;
   --color-green: #40c057;
   --color-green-ink: #277c38;
+  --color-green-lit: #8ce99a;
   --color-indigo: #4c6ef5;
   --color-indigo-ink: #3b5bdb;
+  --color-indigo-lit: #91a7ff;
   --color-lime: #82c91e;
   --color-lime-ink: #4b790b;
+  --color-lime-lit: #c0eb75;
   --color-orange: #fd7e14;
   --color-orange-ink: #c1400d;
+  --color-orange-lit: #ffc078;
   --color-pink: #e64980;
   --color-pink-ink: #c2255c;
+  --color-pink-lit: #faa2c1;
   --color-red: #fa5252;
   --color-red-ink: #c92a2a;
+  --color-red-lit: #ffa8a8;
   --color-teal: #12b886;
   --color-teal-ink: #087c59;
+  --color-teal-lit: #63e6be;
   --color-violet: #7950f2;
   --color-violet-ink: #7048e8;
+  --color-violet-lit: #b197fc;
   --color-yellow: #fab005;
   --color-yellow-ink: #a85700;
+  --color-yellow-lit: #ffe066;
   --color-brown: #a1683a;
   --color-brown-ink: #946035;
+  --color-brown-lit: #d6ae8b;
   --color-slate: #868e96;
   --color-slate-ink: #5c636a;
+  --color-slate-lit: #ced4da;
 }
 
 @layer base {

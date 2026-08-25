@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { spring } from "@/lib/motion";
 import { coverFor } from "@/content/covers";
-import { accentFor, accentVar } from "@/content/palette";
+import { accentFor, accentLit, accentTint } from "@/content/palette";
 import type { Project } from "@/content";
 
 type Props = {
@@ -21,7 +21,7 @@ type Props = {
  * restating them.
  */
 export function ExpandedCard({ project, onClose }: Props) {
-  const cover = coverFor(project.slug);
+  const cover = coverFor(project);
   const onDark = cover.scheme === "dark";
   const ink = onDark ? "#ffffff" : "#0a0a0a";
 
@@ -53,21 +53,23 @@ export function ExpandedCard({ project, onClose }: Props) {
           </p>
           <ul className="flex max-w-md flex-wrap justify-center gap-2">
             {project.tech.map((tech) => {
-              const accent = accentVar(accentFor(tech));
+              const accent = accentFor(tech);
               return (
                 <li
                   key={tech}
                   className="rounded-full px-3 py-1.5 font-mono text-[0.72rem] backdrop-blur-sm"
                   style={{
                     /*
-                      The card art is the accent's backdrop here, so the tone
-                      is carried by a tinted fill and rule and the label stays
-                      on the cover's own ink. Colouring the text instead would
-                      pit each accent against an arbitrary gradient.
+                      The previous site's badge, with one change forced by the
+                      setting: the wash is neutral rather than the accent. The
+                      cover is itself derived from the leading technology, so an
+                      accent-tinted chip of that same technology disappeared into
+                      its own background. Holding the wash neutral keeps every
+                      chip legible whatever hue the card is.
                     */
-                    color: ink,
-                    backgroundColor: `color-mix(in oklab, ${accent} 26%, transparent)`,
-                    boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${accent} 45%, transparent)`,
+                    color: accentLit(accent),
+                    backgroundColor: "rgb(0 0 0 / 0.3)",
+                    boxShadow: `inset 0 0 0 1px ${accentTint(accent, 38)}`,
                   }}
                 >
                   {tech}

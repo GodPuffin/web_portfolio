@@ -71,7 +71,7 @@ export function DeckCard({ project, offset, edgeStep, expanded, onOpen }: Props)
   // form of this.
   useSmoothCorners(frontRef, CORNERS);
   useSmoothCorners(backRef, CORNERS);
-  const cover = coverFor(project.slug);
+  const cover = coverFor(project);
   const onDark = cover.scheme === "dark";
 
   const step = Math.abs(offset);
