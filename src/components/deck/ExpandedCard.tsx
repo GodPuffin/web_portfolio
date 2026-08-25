@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { spring } from "@/lib/motion";
 import { coverFor } from "@/content/covers";
+import { accentFor, accentVar } from "@/content/palette";
 import type { Project } from "@/content";
 
 type Props = {
@@ -51,18 +52,28 @@ export function ExpandedCard({ project, onClose }: Props) {
             {project.title}
           </p>
           <ul className="flex max-w-md flex-wrap justify-center gap-2">
-            {project.tech.map((tech) => (
-              <li
-                key={tech}
-                className="rounded-full px-3 py-1.5 font-mono text-[0.72rem] backdrop-blur-sm"
-                style={{
-                  color: ink,
-                  backgroundColor: onDark ? "rgb(255 255 255 / 0.12)" : "rgb(0 0 0 / 0.06)",
-                }}
-              >
-                {tech}
-              </li>
-            ))}
+            {project.tech.map((tech) => {
+              const accent = accentVar(accentFor(tech));
+              return (
+                <li
+                  key={tech}
+                  className="rounded-full px-3 py-1.5 font-mono text-[0.72rem] backdrop-blur-sm"
+                  style={{
+                    /*
+                      The card art is the accent's backdrop here, so the tone
+                      is carried by a tinted fill and rule and the label stays
+                      on the cover's own ink. Colouring the text instead would
+                      pit each accent against an arbitrary gradient.
+                    */
+                    color: ink,
+                    backgroundColor: `color-mix(in oklab, ${accent} 26%, transparent)`,
+                    boxShadow: `inset 0 0 0 1px color-mix(in oklab, ${accent} 45%, transparent)`,
+                  }}
+                >
+                  {tech}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </motion.div>

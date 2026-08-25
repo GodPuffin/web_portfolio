@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { useSmoothCorners } from "@lisse/react";
 import { spring } from "@/lib/motion";
 import { coverFor } from "@/content/covers";
+import { accentFor, accentInk } from "@/content/palette";
 import type { Project } from "@/content";
 
 type Props = {
@@ -179,7 +180,11 @@ function Preview({ project }: { project: Project }) {
           {project.title}
         </p>
         {project.tech.map((tech) => (
-          <span key={tech} className="text-muted text-[0.5rem] leading-tight">
+          <span
+            key={tech}
+            className="text-[0.5rem] leading-tight"
+            style={{ color: accentInk(accentFor(tech)) }}
+          >
             {tech}
           </span>
         ))}

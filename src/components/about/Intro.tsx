@@ -1,12 +1,19 @@
 import { motion } from "motion/react";
 import { reveal, stagger } from "@/lib/motion";
+import { accentInk, type Accent } from "@/content/palette";
+
+/** Emphasis takes the accent the previous site gave that phrase. */
+function Em({ accent, children }: { accent: Accent; children: React.ReactNode }) {
+  return <em style={{ color: accentInk(accent) }}>{children}</em>;
+}
 
 /**
  * The about blurb.
  *
  * Written as markup rather than pulled from `content/` because the emphasis is
- * typographic: `.lede` mutes the paragraph and inks whatever sits in an <em>,
- * which a plain string could not express.
+ * typographic: `.lede` mutes the paragraph and lifts whatever sits in an <em>,
+ * which a plain string could not express. Each phrase keeps the accent it
+ * carried on the previous site, in the variant measured to read on the ground.
  */
 export function Intro({ className = "" }: { className?: string }) {
   return (
@@ -18,17 +25,19 @@ export function Intro({ className = "" }: { className?: string }) {
       exit="hidden"
     >
       <motion.p variants={reveal} className="lede text-[1.05rem] leading-relaxed">
-        <em>Computer Engineering student</em> at the{" "}
-        <em>University of British Columbia</em>, with a background in Computer Science
-        and Math.
+        <Em accent="grape">Computer Engineering student</Em> at the{" "}
+        <Em accent="blue">University of British Columbia</Em>, with a background in{" "}
+        <Em accent="green">Computer Science</Em> and <Em accent="orange">Math</Em>.
       </motion.p>
       <motion.p variants={reveal} className="lede text-[1.05rem] leading-relaxed">
-        I build across <em>mechanical</em>, <em>electrical</em>, and <em>software</em>{" "}
-        engineering, lately with a focus on <em>AI tools</em> for everyday use.
+        I build across <Em accent="red">mechanical</Em>,{" "}
+        <Em accent="violet">electrical</Em>, and <Em accent="cyan">software</Em>{" "}
+        engineering, lately with a focus on <Em accent="pink">AI tools</Em> for
+        everyday use.
       </motion.p>
       <motion.p variants={reveal} className="lede text-[1.05rem] leading-relaxed">
-        When I'm not coding, you'll find me <em>skiing</em>, <em>sailing</em>, or{" "}
-        <em>rock climbing</em>.
+        When I'm not coding, you'll find me <Em accent="teal">skiing</Em>,{" "}
+        <Em accent="indigo">sailing</Em>, or <Em accent="brown">rock climbing</Em>.
       </motion.p>
     </motion.div>
   );

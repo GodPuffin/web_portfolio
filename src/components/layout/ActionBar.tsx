@@ -42,7 +42,17 @@ export function ActionBar({ isAbout, contactOpen, onToggleContact, onToggleAbout
   const showSocials = isAbout || contactOpen;
 
   return (
-    <motion.div layout transition={spring.smooth} className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 lg:justify-start">
+    /*
+      `relative` is load bearing. popLayout takes an exiting child out of flow
+      by absolutely positioning it, which resolves against the nearest
+      positioned ancestor: with none, the leaving buttons were placed hundreds
+      of pixels away and flew back across the screen as they faded.
+    */
+    <motion.div
+      layout
+      transition={spring.smooth}
+      className="relative flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 lg:justify-start"
+    >
       <motion.div layout transition={spring.smooth}>
         <IconButton
           label={isAbout ? "Back to projects" : "About Marcus"}
