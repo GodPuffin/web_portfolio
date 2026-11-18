@@ -239,18 +239,6 @@ pub const PROJECTS: &[Project] = &[
         index: 7,
     },
     Project {
-        title: "Made by Kate",
-        description: "Built a complete ecommerce website for a friend's hobby business using Next.js and Stripe.",
-        tech: &["TypeScript", "SQL", "Web Development"],
-        links: &[
-            Link { kind: LinkKind::Website, href: "https://madebykate.ca" },
-            Link { kind: LinkKind::Github, href: "https://github.com/GodPuffin/made-by-kate" },
-        ],
-        rotation: 10.0,
-        z: 5,
-        index: 8,
-    },
-    Project {
         title: "Family Plan Manager",
         description: "A basic web application for managing shared family plans and subscriptions with friends.",
         tech: &["Go", "HTMX", "SQLite"],
@@ -258,9 +246,9 @@ pub const PROJECTS: &[Project] = &[
             Link { kind: LinkKind::Github, href: "https://github.com/GodPuffin/FamilyPlan" },
             Link { kind: LinkKind::Website, href: "https://familyplanmanager.xyz" },
         ],
-        rotation: -4.0,
-        z: 4,
-        index: 9,
+        rotation: 10.0,
+        z: 5,
+        index: 8,
     },
 ];
 
