@@ -30,9 +30,8 @@ pub fn Welcome() -> impl IntoView {
                     <TextSpan c="violet" inherit=true>"electrical"</TextSpan> ", and "
                     <TextSpan c="cyan" inherit=true>"software"</TextSpan>
                     " systems, and lately I've been focused on "
-                    <TextSpan c="pink" inherit=true>"robot learning"</TextSpan> ": "
-                    <TextSpan c="grape" inherit=true>"visual world models"</TextSpan>
-                    ", memory-based navigation, and long-horizon planning. When I'm not coding, you can find me "
+                    <TextSpan c="pink" inherit=true>"robot learning"</TextSpan>
+                    ". When I'm not coding, you can find me "
                     <TextSpan c="teal" inherit=true>"skiing"</TextSpan> ", "
                     <TextSpan c="indigo" inherit=true>"sailing"</TextSpan> ", or "
                     <TextSpan c="brown" inherit=true>"rock climbing"</TextSpan> "."
