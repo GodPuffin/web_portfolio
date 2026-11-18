@@ -69,7 +69,7 @@ pub const EXPERIENCES: &[Experience] = &[
         positions: &[
             Position {
                 title: "Software / AI Developer",
-                date: "2025 - 2026",
+                date: "May 2026 - August 2026",
                 description: "Developed AI workflows for funding program discovery, source validation, and semantic search, building on the change-detection and data-entry tools from earlier terms.",
                 skills: &["Python", "AI", "Web Scraping", "SQL"],
             },
