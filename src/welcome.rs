@@ -22,14 +22,16 @@ pub fn Welcome() -> impl IntoView {
                     </TextA> ", with a background in "
                     <TextSpan c="green" inherit=true>"Computer Science"</TextSpan> " and "
                     <TextSpan c="orange" inherit=true>"Math"</TextSpan>
-                    ". I'm skilled at creating "
-                    <TextSpan c="indigo" inherit=true>"innovative solutions"</TextSpan> " across "
-                    <TextSpan c="red" inherit=true>"mechanical"</TextSpan> ", "
+                    ", heading to "
+                    <TextA href="https://www.epfl.ch/" target="_blank" c="red" inherit=true>
+                        "EPFL"
+                    </TextA> " on exchange in Spring 2027. I build across "
+                    <TextSpan c="indigo" inherit=true>"mechanical"</TextSpan> ", "
                     <TextSpan c="violet" inherit=true>"electrical"</TextSpan> ", and "
-                    <TextSpan c="cyan" inherit=true>"software engineering"</TextSpan>
-                    ", with a recent focus on developing "
-                    <TextSpan c="pink" inherit=true>"AI tools"</TextSpan>
-                    " for everyday use. When I'm not coding, you can find me "
+                    <TextSpan c="cyan" inherit=true>"software"</TextSpan>
+                    " systems, and lately I've been focused on "
+                    <TextSpan c="pink" inherit=true>"robot learning"</TextSpan>
+                    ". When I'm not coding, you can find me "
                     <TextSpan c="teal" inherit=true>"skiing"</TextSpan> ", "
                     <TextSpan c="indigo" inherit=true>"sailing"</TextSpan> ", or "
                     <TextSpan c="brown" inherit=true>"rock climbing"</TextSpan> "."

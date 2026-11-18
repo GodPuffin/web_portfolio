@@ -36,6 +36,18 @@ pub fn Education() -> impl IntoView {
                                 {(!ed.degree.is_empty())
                                     .then(|| view! { <Text size="sm" c="dimmed">{ed.degree}</Text> })}
                                 <Text size="sm">{ed.date}</Text>
+                                {(!ed.highlights.is_empty())
+                                    .then(|| {
+                                        view! {
+                                            <Group gap="xs" style="margin-top:var(--m-spacing-xs);">
+                                                {ed
+                                                    .highlights
+                                                    .iter()
+                                                    .map(|h| view! { <Badge color="grape">{*h}</Badge> })
+                                                    .collect_view()}
+                                            </Group>
+                                        }
+                                    })}
                             </CardHeader>
                         </BaseCard>
                     }
